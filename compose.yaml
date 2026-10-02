@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: destiny_lore
+      POSTGRES_USER: destiny
+      POSTGRES_PASSWORD: destiny_local
+    ports:
+      - "5432:5432"
+    volumes:
+      - destiny-db:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U destiny -d destiny_lore"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    working_dir: /app
+    command: sh -c "npm ci && npm run bootstrap && npm run dev:netlify -- --offline --no-open --port 8888"
+    ports:
+      - "8888:8888"
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - destiny-node-modules-bookworm:/app/node_modules
+    environment:
+      DATABASE_URL: postgres://destiny:destiny_local@db:5432/destiny_lore
+      BUNGIE_API_KEY: ${BUNGIE_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  destiny-db:
+  destiny-node-modules-bookworm:

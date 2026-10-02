@@ -1,0 +1,42 @@
+{
+  "name": "destiny-lore-vault",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:netlify": "netlify dev",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "db:init": "node scripts/init-db.mjs",
+    "bootstrap": "node scripts/bootstrap.mjs",
+    "sync:lore": "node scripts/sync-lore.mjs",
+    "sync:lore-groups": "node scripts/sync-lore-groups.mjs",
+    "index:release-items": "node scripts/build-release-item-index.mjs",
+    "sync:release-items": "node scripts/sync-release-items.mjs",
+    "sync:catalog:d1": "node scripts/sync-catalog-d1.mjs",
+    "sync:catalog:d2": "node scripts/sync-catalog-d2.mjs",
+    "sync:d1": "node scripts/sync-d1-grimoire.mjs",
+    "check:d1": "node scripts/check-d1-grimoire.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "fflate": "^0.8.3",
+    "he": "^1.2.0",
+    "pg": "^8.13.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sql.js": "^1.14.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/sql.js": "^1.4.11",
+    "@vitejs/plugin-react": "^4.3.4",
+    "netlify-cli": "^27.10.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}
