@@ -4,7 +4,7 @@ import { pool } from "../netlify/functions/lib/db.mjs";
 
 const SYNC_VERSION = "v9";
 const D1_SYNC_VERSION = "v11";
-const CATALOG_SYNC_VERSION = "v14";
+const CATALOG_SYNC_VERSION = "v15";
 const LORE_GROUPS_SYNC_VERSION = "v21";
 const RELEASE_ITEMS_SYNC_VERSION = "v2";
 const SYNC_TASKS = [

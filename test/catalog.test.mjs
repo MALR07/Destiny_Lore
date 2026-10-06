@@ -64,6 +64,7 @@ test("maps D2 weapons, armor, and narrative items with Spanish metadata and icon
   assert.equal(records[0].itemType, "Fusil automático");
   assert.equal(records[0].iconUrl, "https://www.bungie.net/common/destiny2_content/icons/rifle.png");
   assert.equal(records[1].classType, 0);
+  assert.equal(records[0].classType, null);
   assert.equal(records[1].rarity, "Leyenda");
   assert.match(records[0].summaryEs, /Fusil automático/);
   assert.match(records[0].summaryEs, /Peculiar/);
@@ -156,6 +157,7 @@ test("maps D1 weapon/armor references and named characters without cross-table i
   assert.equal(items[0].rarity, "Excepcional");
   assert.equal(items[0].itemType, "Cañón de mano");
   assert.equal(items[1].classType, 0);
+  assert.equal(items[0].classType, null);
   assert.equal(items[1].rarity, "Leyenda");
   assert.equal(items[0].rarity, "Excepcional");
   assert.equal(items[0].descriptionEn, "English weapon description.");

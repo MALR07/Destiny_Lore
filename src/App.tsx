@@ -15,6 +15,7 @@ import GamePortal from "./components/GamePortal";
 import StellarMap from "./components/StellarMap";
 import RaidArchive from "./components/RaidArchive";
 import RaidDetail from "./components/RaidDetail";
+import ApiLoading from "./components/ApiLoading";
 import { raids } from "./data/raids";
 import { getCatalog, getCatalogEntryById, getLore, getLoreEntryById, getLoreGroups } from "./lib/api";
 import type {
@@ -34,7 +35,6 @@ export default function App() {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [withVideos, setWithVideos] = useState(false);
   const [game, setGame] = useState<"all" | "destiny1" | "destiny2">("all");
   const [archiveMode, setArchiveMode] = useState<
     "home" | "game" | "destinations" | "raids" | "raid-detail" | "lore" | "books" | "releases" | "timeline" | "catalog"
@@ -113,7 +113,7 @@ export default function App() {
         ? getLore(
           search,
           page,
-          withVideos && !groupType,
+          false,
           groupType ? "all" : game,
           controller.signal,
           selectedGroup?.id,
@@ -135,7 +135,7 @@ export default function App() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [search, page, withVideos, game, archiveMode, catalogCategory, catalogRarity, catalogClassType, selectedGroup]);
+  }, [search, page, game, archiveMode, catalogCategory, catalogRarity, catalogClassType, selectedGroup]);
 
   async function openReleaseLore(id: string) {
     try {
@@ -284,7 +284,7 @@ export default function App() {
             <img
               alt=""
               fetchPriority="high"
-              src="https://wallpapers.com/images/hd/the-traveler-ascending-from-the-last-city-in-destiny-80yfepu91utafi91.jpg"
+              src="/media/site-art/portada/arte%20intro.jpg"
             />
           </div>
           <div className="hero-content">
@@ -297,14 +297,7 @@ export default function App() {
               EXPLORAR EL ARCHIVO <span aria-hidden="true">↓</span>
             </button>
           </div>
-          <a
-            className="hero-art-credit"
-            href="https://wallpapers.com/wallpapers/the-traveler-ascending-from-the-last-city-in-destiny-80yfepu91utafi91.html"
-            rel="noreferrer"
-            target="_blank"
-          >
-            ARTE DE DESTINY · FUENTE WALLPAPERS.COM ↗
-          </a>
+          <span className="hero-art-credit">ARTE DE PORTADA · IMAGEN LOCAL</span>
         </section>
 
         {archiveMode === "home" && (
@@ -363,7 +356,7 @@ export default function App() {
                 <p>{error}</p>
               </div>
             ) : loading ? (
-              <div className="stellar-loading" role="status">RECUPERANDO EL ARCHIVO DE INCURSIONES…</div>
+              <ApiLoading message="Recuperando el archivo de incursiones…" />
             ) : (
               <RaidArchive
                 game={game}
@@ -528,26 +521,7 @@ export default function App() {
               >
                 DESTINY 2
               </button>}
-              {archiveMode === "lore" ? (
-                <>
-                  <button
-                    aria-pressed={!withVideos}
-                    className={!withVideos ? "filter-active" : ""}
-                    onClick={() => { setPage(1); setWithVideos(false); }}
-                    type="button"
-                  >
-                    SIN FILTRO DE VÍDEO
-                  </button>
-                  <button
-                    aria-pressed={withVideos}
-                    className={withVideos ? "filter-active" : ""}
-                    onClick={() => { setPage(1); setWithVideos(true); }}
-                    type="button"
-                  >
-                    ◉ &nbsp; CON VÍDEO
-                  </button>
-                </>
-              ) : archiveMode === "catalog" ? (
+              {archiveMode === "catalog" ? (
                 <>
                   {([
                     ["all", "TODO EL CATÁLOGO"],
@@ -637,6 +611,10 @@ export default function App() {
             </span>
           </div>}
 
+          {loading && (
+            <ApiLoading compact message="Consultando el archivo y sus manifiestos…" />
+          )}
+
           {error && (
             <div className="state-panel error-panel" role="alert">
               <span className="state-symbol">!</span>
@@ -690,6 +668,7 @@ export default function App() {
               key={selectedGroup.id}
               onOpenLore={openReleaseLore}
               onOpenCatalog={setSelectedCatalog}
+              onOpenRaid={openRaidDetail}
               search={search}
             />
           )}
@@ -754,18 +733,60 @@ export default function App() {
               priorizan la terminología oficial en español y cada vídeo se revisa antes de añadirse.
             </p>
             <p className="project-credits">
-              Archivo comunitario para Guardianes de Latinoamérica y España. Gracias a{" "}
+              Archivo comunitario sin ánimo de lucro para Guardianes de Latinoamérica y España.
+              Destiny y sus elementos pertenecen a sus respectivos titulares. Gracias a{" "}
               <a href="https://www.bungie.net/" rel="noreferrer" target="_blank">Bungie</a>{" "}
-              por Destiny y sus manifiestos. Proyecto de fans, sin afiliación oficial.
+              por sus manifiestos. Proyecto de fans, no oficial y sin afiliación con Bungie.
             </p>
           </div>
           <span className="note-signature">POR LA LUZ.</span>
         </section>
       </main>
       <footer className="site-footer">
-        <span>ARCHIVO DEL VIAJERO</span>
-        <span>PROYECTO DE FANS · NO AFILIADO CON BUNGIE</span>
-        <span>QUE LA LUZ TE GUÍE</span>
+        <div className="site-footer-brand">
+          <img alt="" height="54" src="/media/archivo.png" width="54" />
+          <span>ARCHIVO DEL VIAJERO</span>
+        </div>
+        <div className="site-footer-notice">
+          <span>PROYECTO COMUNITARIO SIN ÁNIMO DE LUCRO · NO OFICIAL · NO AFILIADO CON BUNGIE</span>
+          <span>QUE LA LUZ TE GUÍE</span>
+        </div>
+        <nav className="site-footer-socials" aria-label="Enlaces personales">
+          <a
+            href="https://www.linkedin.com/in/miguel-angel-ledesma-rodriguez"
+            rel="noreferrer"
+            target="_blank"
+            aria-label="LinkedIn de Miguel Ángel"
+            title="LinkedIn"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.7v2.2h.07c.65-1.23 2.23-2.53 4.59-2.53 4.9 0 5.8 3.22 5.8 7.41V24h-5v-6.5c0-1.55-.03-3.55-2.16-3.55-2.16 0-2.49 1.68-2.49 3.42V24h-5V8z" />
+            </svg>
+          </a>
+          <a
+            href="https://github.com/MALR07"
+            rel="noreferrer"
+            target="_blank"
+            aria-label="GitHub de Miguel Ángel"
+            title="GitHub"
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+          </a>
+          <a
+            href="https://portfolio-miguel-a-ledesma.netlify.app/"
+            rel="noreferrer"
+            target="_blank"
+            aria-label="Portafolio de Miguel Ángel"
+            title="Portafolio"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" />
+            </svg>
+          </a>
+        </nav>
       </footer>
       {selected && (
         <LoreReader

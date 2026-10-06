@@ -3,6 +3,12 @@ export interface RaidEncounter {
   guide: string;
 }
 
+export interface RaidCompleteRun {
+  youtubeId: string;
+  title: string;
+  creator: string;
+}
+
 export interface RaidDefinition {
   id: string;
   game: "destiny1" | "destiny2";
@@ -12,6 +18,7 @@ export interface RaidDefinition {
   label: string;
   summary: string;
   rewards: string[];
+  completeRun?: RaidCompleteRun;
   encounters: RaidEncounter[];
 }
 
@@ -21,6 +28,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "destiny", label: "DESTINY ORIGINAL",
     summary: "Desciende a las ruinas vex de Venus, sobrevive a las pruebas de los oráculos y derrota a Atheon, el Conflujo del Tiempo.",
     rewards: ["Fatebringer", "Vision of Confluence", "Praedyth's Revenge", "Praedyth's Timepiece", "Found Verdict", "Corrective Measure", "Hezen Vengeance", "Praetorian Foil", "Atheon's Epilogue", "Vex Mythoclast", "Armadura de la Cámara de Cristal"],
+    completeRun: {
+      youtubeId: "vGklAPqUPZU",
+      title: "The Vault of Glass Full Raid (No Commentary)",
+      creator: "Boredom Defense Network",
+    },
     encounters: [
       { name: "Construir la Aguja", guide: "Separa al equipo entre las tres placas del patio. Mantén cada placa bajo control y derrota a los vex que intentan recuperarla hasta que la aguja abra el acceso." },
       { name: "Confluencias", guide: "Defiende las confluencias por orden. Divide el equipo para cubrir los accesos, elimina a los fanáticos antes de que alcancen la placa y recoge sus marcas entrando en la luz." },
@@ -34,6 +46,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "the-dark-below", label: "LA PROFUNDA OSCURIDAD",
     summary: "Atraviesa el Abismo, cruza el puente de la Colmena y abre camino hasta la cámara de Crota en la Luna.",
     rewards: ["Abyss Defiant", "Oversoul Edict", "Fang of Ir Yût", "Swordbreaker", "Word of Crota", "Hunger of Crota", "Black Hammer", "Light of the Abyss", "Song of Ir Yût", "Armadura del Fin de Crota", "Necrochasm (búsqueda exótica)"],
+    completeRun: {
+      youtubeId: "zcGdeHGRxSo",
+      title: "Destiny CROTA'S END Full Raid Gameplay Walkthrough",
+      creator: "TheRelaxingEnd",
+    },
     encounters: [
       { name: "El Abismo", guide: "Avanza entre las lámparas evitando que la acumulación de oscuridad te inmovilice. Activa cada lámpara como zona segura, controla a los perseguidores y cruza el abismo en grupo." },
       { name: "El Puente", guide: "Mantén las placas para formar el puente y elimina a los enemigos que amenazan a los portadores de espada. Cruza con las espadas, derrota a los campeones del otro lado y reúne al equipo." },
@@ -46,6 +63,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "the-taken-king", label: "EL REY DE LOS POSEÍDOS",
     summary: "Asalta la nave de Oryx, supera las pruebas de la Cámara de la Noche y enfréntate al Rey de los Poseídos.",
     rewards: ["Smite of Merain", "Defiance of Yasmin", "Anguish of Drystan", "Doom of Chelchis", "Zaouli's Bane", "Qullim's Terminus", "Silence of A'Arn", "Midha's Reckoning", "Elulim's Frenzy", "Touch of Malice", "Armadura de Caída del Rey"],
+    completeRun: {
+      youtubeId: "qt7RPAy0FS8",
+      title: "New 390 King's Fall Full Raid Clear",
+      creator: "Esoterickk",
+    },
     encounters: [
       { name: "La Corte de Oryx y las naves", guide: "Carga las reliquias y deposítalas simultáneamente en las estatuas para abrir el portal. En el cruce de naves, coordina los saltos y activa los puntos de control en el recorrido." },
       { name: "Los Tótems", guide: "Alterna a los jugadores entre las placas y los tótems para transferir la marca de Tejedor de la Luz. Descarga las acumulaciones en el centro y destruye la barrera antes de que se agote el tiempo." },
@@ -60,6 +82,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "rise-of-iron", label: "LOS SEÑORES DE HIERRO",
     summary: "Persigue a los Caídos hasta la Cámara de Replicación y detén la propagación de SIVA.",
     rewards: ["Genesis Chain", "Steel Medulla", "Fever and Remedy", "Chaos Dogma", "Ex Machina", "Zeal Vector", "Ether Nova", "Quantiplasm", "Sound and Fury", "Armadura de la Ira de las Máquinas", "Outbreak Prime (búsqueda exótica)"],
+    completeRun: {
+      youtubeId: "znUfLgO6QzM",
+      title: "Wrath of the Machine Full Raid (No Commentary)",
+      creator: "Boredom Defense Network",
+    },
     encounters: [
       { name: "Asedio a la Muralla", guide: "Recoge las cargas SIVA y lánzalas a los generadores de la puerta. Mantén el avance del tanque al despejar los bloqueos y protege a quien coloca cada carga." },
       { name: "Vosik, el Arconte", guide: "Lanza las cargas a Vosik para bajar su escudo. Cuando active la purga, entra en una de las salas seguras y dispara al panel de cierre; repite el ciclo y remátalo." },
@@ -72,6 +99,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "destiny-2", label: "LEGADO · RETIRADA DEL JUEGO",
     summary: "Explora el Leviatán de Calus y completa sus pruebas antes de enfrentarte al emperador.",
     rewards: ["Midnight Coup", "Inaugural Address", "Alone as a God", "Sins of the Past", "Conspirator", "Mob Justice", "Armaduras del Leviatán", "Legend of Acrius (búsqueda exótica)"],
+    completeRun: {
+      youtubeId: "bfaDsFgXWos",
+      title: "Leviathan (Complete Raid)",
+      creator: "thatdudeEd",
+    },
     encounters: [
       { name: "Castellum", guide: "Los portadores de estandarte limpian las posiciones y llevan las insignias a la puerta. El equipo restante defiende a los portadores; repite la mecánica en cada acceso." },
       { name: "Baños Reales", guide: "Activa las placas exteriores por parejas y recoge los orbes del agua para refrescar el temporizador. Reúne las cargas en el centro, destruye los incensarios y repite el ciclo." },
@@ -85,6 +117,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "curse-of-osiris", label: "LEGADO · RETIRADA DEL JUEGO",
     summary: "Adéntrate en el Leviatán y desmantela el motor vex Argos antes de que consuma el planetoide.",
     rewards: ["I Am Alive", "Zenith of Your Kind", "Catalizador de Telesto", "Armadura de Devorador de Mundos"],
+    completeRun: {
+      youtubeId: "Krt4N1vcLHA",
+      title: "Complete Eater of Worlds Raid Lair",
+      creator: "Mr. Fruit",
+    },
     encounters: [
       { name: "Entrada al motor", guide: "Salta entre los fragmentos del planetoide, activa los mecanismos y abre camino por los anillos. Mantén el ritmo del grupo y espera a quienes deban accionar cada plataforma." },
       { name: "Argos, núcleo planetario", guide: "Recoge las reliquias elementales y colócalas en los puntos del escudo según el patrón mostrado. Rompe el escudo, destruye los puntos débiles del jefe y repite las fases de daño." },
@@ -95,6 +132,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "warmind", label: "LEGADO · RETIRADA DEL JUEGO",
     summary: "Aborda la nave de Calus y detén el golpe de estado de Val Ca'uor.",
     rewards: ["Emperor's Envy", "Last of the Legion", "Catalizador de Sleeper Simulant", "Armadura de Espira de Estrellas"],
+    completeRun: {
+      youtubeId: "XhTWPpc4IEo",
+      title: "Spire of Stars (Full Raid Lair Completion)",
+      creator: "StrawDesertHD",
+    },
     encounters: [
       { name: "Castellum", guide: "Consigue estandartes, deposítalos en las placas y defiende cada posición de las oleadas. Coordina el relevo entre los equipos para completar la apertura." },
       { name: "Ascenso", guide: "Usa las placas de lanzamiento para cruzar la estructura y derrota a los centuriones que protegen la ruta. Activa los puntos de control y agrupa al equipo en la plataforma final." },
@@ -106,6 +148,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "forsaken", label: "LOS RENEGADOS",
     summary: "Rompe la maldición de la Ciudad Ensoñada y derrota a Riven, la última Ahamkara conocida.",
     rewards: ["Chattering Bone", "Transfiguration", "Nation of Beasts", "Tyranny of Heaven", "The Supremacy", "Techeun Force", "Apex Predator", "One Thousand Voices", "Armadura del Último Deseo"],
+    completeRun: {
+      youtubeId: "OPq8slhZSlQ",
+      title: "Last Wish - Full Raid - No Commentary",
+      creator: "SpaceTruckin'",
+    },
     encounters: [
       { name: "Kalli", guide: "Identifica el símbolo pedido y activa las placas correspondientes. Durante la fase de daño, entra en la cámara segura cuando Kalli anuncie la aniquilación y sal para continuar el ciclo." },
       { name: "Shuro Chi", guide: "Lee los símbolos, recoge los prismas y dispara a los compañeros para completar los triángulos. Derrota a los enemigos dentro del tiempo y resuelve las salas de plataformas antes de que termine el temporizador." },
@@ -120,6 +167,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "season-of-the-forge", label: "LEGADO · RETIRADA DEL JUEGO",
     summary: "Persigue a los Caídos por la Última Ciudad y frustra el plan de la Casa de los Demonios.",
     rewards: ["Threat Level", "No Feelings", "Tempered Dynamo", "Bellowing Giant", "Stryker's Sure-Hand", "Anarchy", "Armadura del Azote del Pasado"],
+    completeRun: {
+      youtubeId: "UkWicIDPNhM",
+      title: "Scourge of the Past (Final Completion, No Commentary)",
+      creator: "thatdudeEd",
+    },
     encounters: [
       { name: "Distrito Botza", guide: "Usa el mapa para localizar al Berserker, separa a los equipos por color y dispara a sus puntos débiles frontal y dorsal. Deposita las cargas en los conductos del mismo color." },
       { name: "Insurrección Prime: asalto", guide: "Desactiva los escudos de los tanques emparejando los operadores con los puntos de color. Carga los núcleos, destruye los generadores y evita las zonas de bombardeo." },
@@ -131,6 +183,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "season-of-opulence", label: "LEGADO · RETIRADA DEL JUEGO",
     summary: "Desciende a las profundidades del Leviatán para detener a Gahlran y la corrupción de la Colmena.",
     rewards: ["Gahlran's Right Hand", "Emperor's Courtesy", "Calusea Noblesse", "Bane of Sorrow", "Tarrabah", "Armadura de la Corona del Dolor"],
+    completeRun: {
+      youtubeId: "LsdCq63hbRQ",
+      title: "Crown of Sorrow Full Raid",
+      creator: "Joe Savino",
+    },
     encounters: [
       { name: "Puente de la Maldición", guide: "Comparte el potenciador de la bruja entre parejas para romper cristales y derrotar a los caballeros protegidos. Avanza por las placas sin dejar que expire el efecto." },
       { name: "Gahlran, engaño", guide: "Separa al equipo en parejas potenciadas y no potenciadas. Rompe los cristales a la vez, comunica las posiciones del engaño y aturde al enemigo falso con los jugadores potenciados." },
@@ -142,6 +199,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "shadowkeep", label: "BASTIÓN DE SOMBRAS",
     summary: "Sigue la señal de la Oscuridad hasta el Jardín Negro y enfréntate a los Vex Sol Divisivos.",
     rewards: ["Sacred Provenance", "Ancient Gospel", "Reckless Oracle", "Prophet of Doom", "Zealot's Reward", "Omniscient Eye", "Divinity (búsqueda exótica)", "Armadura del Jardín de la Salvación"],
+    completeRun: {
+      youtubeId: "boZzk03-xAc",
+      title: "Garden of Salvation - Full Raid - No Commentary",
+      creator: "SpaceTruckin'",
+    },
     encounters: [
       { name: "Evade la mente consagrada", guide: "Conduce al jefe y a los enemigos por el recorrido, derrota a los minotauros y recoge motas para depositarlas en el receptáculo. Activa portales con el equipo de apoyo y defiende el punto." },
       { name: "Mente consagrada", guide: "Dispara al ojo marcado para atraer al jefe y comunica el color del ojo que debe destruirse. Recoge motas del minotauro, deposítalas y daña al jefe cuando se detenga." },
@@ -153,6 +215,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "beyond-light", label: "MÁS ALLÁ DE LA LUZ",
     summary: "Infiltra la instalación de BrayTech en Europa y detén a Taniks antes de que alcance la Última Ciudad.",
     rewards: ["Succession", "Heritage", "Posterity", "Trustee", "Bequest", "Eyes of Tomorrow", "Armadura de la Cripta de la Piedra Profunda"],
+    completeRun: {
+      youtubeId: "wJYYJPtgQ30",
+      title: "Deep Stone Crypt | Full Raid | No Commentary",
+      creator: "Ilya Dalamiq",
+    },
     encounters: [
       { name: "Seguridad de la Cripta", guide: "El operador identifica los paneles rojos desde el cristal mientras el escáner señala los amarillos desde abajo. Pasa los potenciadores por los tubos y dispara los paneles en el orden comunicado." },
       { name: "Atraks-1", guide: "El equipo de arriba elimina las copias mientras el equipo del espacio recoge potenciadores y lanza los núcleos al espacio. Identifica la copia real, expulsa el replicante y repite la secuencia de daño." },
@@ -165,6 +232,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "season-of-the-splicer", label: "REGRESO · TEMPORADA DEL SIMBIONTE",
     summary: "Regresa a Venus y afronta la incursión vex clásica, reintroducida en Destiny 2.",
     rewards: ["Fatebringer", "Vision of Confluence", "Praedyth's Revenge", "Found Verdict", "Corrective Measure", "Hezen Vengeance", "Vex Mythoclast", "Armadura de la Cámara de Cristal"],
+    completeRun: {
+      youtubeId: "tJ9If8sqZak",
+      title: "Vault of Glass | Full Raid | No Commentary",
+      creator: "Ilya Dalamiq",
+    },
     encounters: [
       { name: "Construir la Aguja", guide: "Separa al equipo entre las tres placas del patio. Mantén cada placa bajo control y derrota a los vex que intentan recuperarla hasta que la aguja abra el acceso." },
       { name: "Confluencias y oráculos", guide: "Defiende las confluencias por orden y evita que los fanáticos marquen a los jugadores. En los oráculos, aprende la secuencia y destruye cada aparición en el orden anunciado." },
@@ -178,6 +250,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "the-witch-queen", label: "LA REINA BRUJA",
     summary: "Irrumpe en la Pirámide de Savathûn y descubre el secreto de Rhulk, el primer Discípulo.",
     rewards: ["Submission", "Deliverance", "Forbearance", "Insidious", "Cataclysmic", "Lubrae's Ruin", "Collective Obligation", "Armadura del Voto del Discípulo"],
+    completeRun: {
+      youtubeId: "LNlWwzwI4JM",
+      title: "Vow of the Disciple - Full Raid - No Commentary",
+      creator: "SpaceTruckin'",
+    },
     encounters: [
       { name: "Adquisición", guide: "Lee los símbolos del monolito y comunica los que aparecen en cada sala. Derrota a los guardianes con el símbolo correcto y dispara a los obeliscos antes de que se agote el tiempo." },
       { name: "Cuidador", guide: "Un equipo recoge símbolos en la sala y otro limpia los puntos débiles del jefe. Aturde al Cuidador disparando a sus placas, sube por los pisos y daña la cabeza al final." },
@@ -190,6 +267,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "season-of-plunder", label: "REGRESO · TEMPORADA DE LOS TESOROS",
     summary: "Vuelve al Acorazado para detener a Oryx en la versión de Destiny 2 de la incursión.",
     rewards: ["Doom of Chelchis", "Zaouli's Bane", "Smite of Merain", "Defiance of Yasmin", "Qullim's Terminus", "Midha's Reckoning", "Touch of Malice", "Armadura de Caída del Rey"],
+    completeRun: {
+      youtubeId: "KaH_DLnW6s4",
+      title: "King's Fall | Full Raid | No Commentary",
+      creator: "Ilya Dalamiq",
+    },
     encounters: [
       { name: "La Corte de Oryx y las naves", guide: "Deposita las reliquias en las estatuas de forma coordinada. En el cruce, salta entre las naves y activa los puntos de control para que el equipo pueda avanzar." },
       { name: "Los Tótems", guide: "Alterna a los jugadores entre placas y tótems para transferir la marca. Descarga acumulaciones en el centro y destruye la barrera antes de que el equipo pierda el control." },
@@ -204,6 +286,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "lightfall", label: "ECLIPSE",
     summary: "Aborda la nave pirámide del Testigo y despierta a Nezarec, heraldo de la última forma.",
     rewards: ["Rufus's Fury", "Conditional Finality", "Acasia's Dejection", "Briar's Contempt", "Mykel's Reverence", "Armadura de Raíces de las Pesadillas"],
+    completeRun: {
+      youtubeId: "eGj-r1PxfqQ",
+      title: "Root of Nightmares | Full Raid | No Commentary",
+      creator: "Ilya Dalamiq",
+    },
     encounters: [
       { name: "Cataclismo", guide: "Un jugador enlaza nodos de Luz siguiendo las marcas mientras el resto elimina a los atormentadores y protege al portador. Completa la cadena antes de que expire el temporizador." },
       { name: "Escisión", guide: "Divide el equipo entre los lados de Luz y Oscuridad. Activa nodos, transfiere el potenciador mediante los campos y avanza por las plataformas hasta la parte superior." },
@@ -216,6 +303,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "season-of-the-witch", label: "REGRESO · TEMPORADA DE LAS BRUJAS",
     summary: "Repite el descenso a la Luna en la versión de Destiny 2, con encuentros revisados y la amenaza renovada de Crota.",
     rewards: ["Abyss Defiant", "Oversoul Edict", "Fang of Ir Yût", "Swordbreaker", "Word of Crota", "Song of Ir Yût", "Necrochasm", "Armadura del Fin de Crota"],
+    completeRun: {
+      youtubeId: "AEu4U-Z9upA",
+      title: "Crota's End (D2) - Full Raid - No Commentary",
+      creator: "SpaceTruckin'",
+    },
     encounters: [
       { name: "El Abismo", guide: "Avanza de lámpara en lámpara antes de que la oscuridad te inmovilice. Comparte la carga de Luz entre el grupo, carga las placas y cruza el puente con el equipo unido." },
       { name: "El Puente", guide: "Carga el puente y derrota a los campeones de cada lado para cruzar las espadas. Coordina las reliquias y los roles de los guardianes que permanecen en cada orilla." },
@@ -228,6 +320,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "the-final-shape", label: "LA FORMA FINAL",
     summary: "Atraviesa el Monolito dentro del Viajero y detén al Testigo en el umbral de su forma final.",
     rewards: ["Imminence", "Non-Denouement", "Critical Anomaly", "Embraced Identity", "Summum Bonum", "Euphony", "Armadura del Borde de la Salvación"],
+    completeRun: {
+      youtubeId: "8rpyOQdlqtE",
+      title: "Salvation's Edge - Full Raid & Ending - No Commentary",
+      creator: "SpaceTruckin'",
+    },
     encounters: [
       { name: "Substrato", guide: "Activa las placas y recoge las cargas de Resonancia que aparecen en las salas. Deposítalas en los pedestales correspondientes mientras el equipo elimina a los guardianes de la zona." },
       { name: "Herald del Testigo", guide: "Rompe los puntos débiles del jefe para generar Resonancia y lee el patrón de símbolos. Deposita la carga en el pedestal indicado y daña al Herald en las ventanas." },
@@ -241,6 +338,11 @@ export const raids: RaidDefinition[] = [
     releaseSlug: "the-edge-of-fate", label: "LOS CONFINES DEL DESTINO",
     summary: "Explora el desierto vex, decide el orden de tres enfrentamientos y derrota a Koregos, el jefe final de la incursión.",
     rewards: ["Antedate", "Finite Maybe", "Opaque Hourglass", "Lance Ephemeral", "Intercalary", "The When and Where", "Whirling Ovation (exótica)", "Armadura Colectiva Psyche"],
+    completeRun: {
+      youtubeId: "3Mll3cQm33I",
+      title: "The Desert Perpetual | Full Raid | No Commentary",
+      creator: "Ilya Dalamiq",
+    },
     encounters: [
       { name: "Predestinación", guide: "En el centro del área, elige uno de los tres accesos para decidir cuál de los jefes opcionales afrontar primero: Epoptes, Iatros o Agraios. Sigue la línea de esferas hasta la puerta correspondiente y vuelve al núcleo entre encuentros; completa los tres para abrir el final." },
       { name: "Epoptes, Señor de los Cuanta", guide: "Forma tres parejas para las salas laterales y el centro. Derrota a los Magistrados del Tiempo para obtener la Temporabilidad Cíclica; los jugadores potenciados se coordinan entre salas para romper los ojos de las hidras en sincronía. El centro comunica los cristales que deben dispararse; repite la lectura y destruye los ojos del escudo central para iniciar daño. Durante el daño, los jugadores señalados deben interceptar los haces del jefe y disparar a sus ojos para prolongar la ventana." },

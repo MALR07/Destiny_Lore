@@ -3,6 +3,8 @@ import { getLoreGroups } from "../lib/api";
 import type { LoreGroup } from "../types/lore";
 import { isBungieAsset } from "../lib/bungie-assets";
 import { getReleaseIconUrl } from "../lib/release-icons";
+import { getReleaseArtwork, getReleaseDisplayTitle } from "../data/release-artwork";
+import ApiLoading from "./ApiLoading";
 
 interface GamePortalProps {
   game: "destiny1" | "destiny2";
@@ -101,13 +103,16 @@ export default function GamePortal({
       </div>
       {error && <p className="game-hub-error" role="alert">{error}</p>}
       {loading ? (
-        <p className="game-hub-loading">RECUPERANDO LOS REGISTROS…</p>
+        <ApiLoading message="Recuperando los registros de lanzamientos…" />
       ) : (
         <div className="game-release-grid">
           {releases.map((release) => {
-            const artwork = release.releaseImageKind === "artwork" && isBungieAsset(release.releaseImageUrl)
-              ? release.releaseImageUrl
-              : null;
+            const releaseTitle = getReleaseDisplayTitle(release.releaseSlug, release.title);
+            const localArtwork = getReleaseArtwork(release.releaseSlug);
+            const artwork = localArtwork?.src
+              ?? (release.releaseImageKind === "artwork" && isBungieAsset(release.releaseImageUrl)
+                ? release.releaseImageUrl
+                : null);
             const icon = getReleaseIconUrl(release.releaseSlug)
               ?? (release.releaseImageKind === "icon" && isBungieAsset(release.releaseImageUrl)
                 ? release.releaseImageUrl
@@ -118,7 +123,7 @@ export default function GamePortal({
                 key={release.id}
                 onClick={() => onOpenRelease(release)}
                 type="button"
-                aria-label={`Abrir la ficha de ${release.title}`}
+                aria-label={`Abrir la ficha de ${releaseTitle}`}
               >
                 {artwork && (
                   <img
@@ -129,6 +134,7 @@ export default function GamePortal({
                     src={artwork}
                   />
                 )}
+                {localArtwork && <span className="game-release-art-credit">{localArtwork.credit}</span>}
                 {icon && (
                   <img
                     alt=""
@@ -138,7 +144,7 @@ export default function GamePortal({
                   />
                 )}
                 <span className="eyebrow">{release.releaseNumber ? `LANZAMIENTO ${release.releaseNumber}` : "LANZAMIENTO"}</span>
-                <strong>{release.title}</strong>
+                <strong>{releaseTitle}</strong>
                 <span>{release.localEntryCount.toLocaleString("es-ES")} relatos · {(release.catalogItemCount ?? 0).toLocaleString("es-ES")} objetos</span>
                 <i aria-hidden="true">VER EXPANSIÓN Y CONTENIDO ↗</i>
               </button>

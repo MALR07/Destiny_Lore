@@ -29,8 +29,8 @@ export default function ArchiveLanding({
   return (
     <section className="landing-hub" aria-label="Entradas al archivo">
       <div className="landing-heading">
-        <span className="eyebrow">ELIGE TU RUTA · ARCHIVO DEL VIAJERO</span>
-        <h2>Dos eras. <em>Una misma Luz.</em></h2>
+        <span className="eyebrow">ARCHIVO DEL VIAJERO</span>
+        <h2>Elige tu <em>ruta.</em></h2>
         <p>Entra por juego, sigue las crónicas o busca cualquier elemento del universo.</p>
       </div>
 

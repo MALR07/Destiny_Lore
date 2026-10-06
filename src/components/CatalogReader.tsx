@@ -1,4 +1,5 @@
 import { decodeHtmlEntities } from "../lib/text";
+import { getDestinationArtworkUrl, getDestinationLore } from "../data/destination-artwork";
 import type { CatalogEntry } from "../types/lore";
 
 const CATEGORY_LABELS: Record<CatalogEntry["category"], string> = {
@@ -14,9 +15,17 @@ const CATEGORY_LABELS: Record<CatalogEntry["category"], string> = {
 interface CatalogReaderProps {
   entry: CatalogEntry;
   onClose: () => void;
+  largeArtwork?: boolean;
 }
 
-export default function CatalogReader({ entry, onClose }: CatalogReaderProps) {
+export default function CatalogReader({ entry, onClose, largeArtwork = false }: CatalogReaderProps) {
+  const destinationArtwork = getDestinationArtworkUrl(entry);
+  const destinationLore = getDestinationLore(entry);
+  const fallbackArtwork = destinationArtwork
+    ? null
+    : largeArtwork
+      ? entry.imageUrl ?? entry.iconUrl
+      : entry.iconUrl ?? entry.imageUrl;
   const description = entry.descriptionEs ?? entry.descriptionEn;
   const descriptionLanguage = entry.descriptionEs ? "es" : entry.descriptionEn ? "en" : null;
   const flavorText = entry.flavorTextEs ?? entry.flavorTextEn;
@@ -39,12 +48,18 @@ export default function CatalogReader({ entry, onClose }: CatalogReaderProps) {
           </button>
         </div>
         <div className="reader-content">
-          {(entry.iconUrl || entry.imageUrl) && (
+          {(destinationArtwork || fallbackArtwork) && (
             <img
               alt=""
-              className={`reader-artwork${entry.iconUrl || entry.imageKind === "icon" ? " reader-artwork-icon" : ""}`}
-              onError={(event) => { event.currentTarget.hidden = true; }}
-              src={entry.iconUrl ?? entry.imageUrl ?? undefined}
+              className={`reader-artwork${largeArtwork ? " reader-artwork-equipment" : destinationArtwork ? " reader-artwork-location" : entry.iconUrl || entry.imageKind === "icon" ? " reader-artwork-icon" : ""}`}
+              onError={(event) => {
+                if (fallbackArtwork && event.currentTarget.getAttribute("src") !== fallbackArtwork) {
+                  event.currentTarget.src = fallbackArtwork;
+                } else {
+                  event.currentTarget.hidden = true;
+                }
+              }}
+              src={destinationArtwork ?? fallbackArtwork ?? undefined}
             />
           )}
           <span className="eyebrow">
@@ -53,6 +68,16 @@ export default function CatalogReader({ entry, onClose }: CatalogReaderProps) {
           </span>
           <h2 id="catalog-reader-title">{decodeHtmlEntities(entry.title)}</h2>
           <div className="reader-rule" />
+          {destinationLore && (
+            <>
+              <span className="catalog-reader-label">CONTEXTO DEL DESTINO</span>
+              <p className="reader-text">{destinationLore.summary}</p>
+              <p className="translation-note">
+                Síntesis propia basada en{" "}
+                <a href={destinationLore.sourceUrl} rel="noreferrer" target="_blank">Destinypedia ↗</a>
+              </p>
+            </>
+          )}
           {description ? (
             <>
               <span className="catalog-reader-label">DESCRIPCIÓN</span>
@@ -63,12 +88,12 @@ export default function CatalogReader({ entry, onClose }: CatalogReaderProps) {
                   : "Texto disponible únicamente en inglés en los manifiestos consultados."}
               </p>
             </>
-          ) : (
+          ) : !destinationLore ? (
             <>
               <p className="reader-text">{decodeHtmlEntities(entry.summaryEs)}</p>
               <p className="translation-note">Resumen informativo del Archivo del Viajero; esta entrada no incluye una descripción en el manifiesto consultado.</p>
             </>
-          )}
+          ) : null}
           {flavorText && !hasDuplicateFlavorText && (
             <>
               <span className="catalog-reader-label">TEXTO DE AMBIENTACIÓN</span>

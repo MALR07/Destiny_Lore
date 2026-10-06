@@ -35,7 +35,7 @@ export default function LoreCard({ entry, onSelect }: LoreCardProps) {
       <span className="card-excerpt">{excerpt}</span>
       <span className="card-footer">
         <span>{entry.contentEs ? "ESPAÑOL OFICIAL" : "ORIGINAL · INGLÉS"}</span>
-        <span>{entry.cinematics.length > 0 ? "◉  CON VÍDEO" : "LEER RELATO"}</span>
+        <span>LEER RELATO</span>
       </span>
     </button>
   );

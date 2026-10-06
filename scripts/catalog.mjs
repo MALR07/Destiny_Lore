@@ -187,7 +187,9 @@ function catalogRecord(game, hash, category, english, spanish, sourceUrl, spanis
     imageUrl: getBungieImageUrl(imagePath),
     imageKind: imagePath ? imageKind : null,
     rarity: rarity?.slice(0, 80) ?? null,
-    classType: Number.isInteger(classType) && classType >= 0 && classType <= 3 ? classType : null,
+    classType: category === "armor" && Number.isInteger(classType) && classType >= 0 && classType <= 3
+      ? classType
+      : null,
     itemType: text(
       localizedDefinition.itemTypeName
         ?? localizedDefinition.itemTypeDisplayName

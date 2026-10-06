@@ -95,6 +95,29 @@ export async function getCatalogEntryById(id: string): Promise<CatalogEntry> {
   return entry;
 }
 
+function normalizeCatalogTitle(value: string): string {
+  return value.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLocaleLowerCase("es").replace(/[^\p{Letter}\p{Number}]/gu, "");
+}
+
+export async function getCatalogEntryByTitle(
+  title: string,
+  game: "destiny1" | "destiny2",
+  releaseSlug: string,
+  signal?: AbortSignal,
+): Promise<CatalogEntry | null> {
+  const findExactMatch = (items: CatalogEntry[]) => items.find((entry) =>
+    normalizeCatalogTitle(entry.titleEn) === normalizeCatalogTitle(title)
+      || normalizeCatalogTitle(entry.title) === normalizeCatalogTitle(title),
+  ) ?? null;
+
+  const releaseResults = await getCatalog(title, 1, game, "all", signal, { releaseSlug });
+  const releaseMatch = findExactMatch(releaseResults.items);
+  if (releaseMatch) return releaseMatch;
+
+  const allResults = await getCatalog(title, 1, game, "all", signal);
+  return findExactMatch(allResults.items);
+}
+
 export async function translateLore(
   id: string,
 ): Promise<{ titleEs: string; contentEs: string }> {

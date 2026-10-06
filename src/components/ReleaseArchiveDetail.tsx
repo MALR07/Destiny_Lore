@@ -4,15 +4,18 @@ import { describeTimelineRelease } from "../data/guardian-timeline";
 import { mediaEntries } from "../data/media";
 import type { CatalogCategory, CatalogEntry, CatalogPage, LoreGroup, LorePage } from "../types/lore";
 import { isBungieAsset } from "../lib/bungie-assets";
+import { getReleaseArtwork, getReleaseDisplayTitle } from "../data/release-artwork";
 import MediaArchive from "./MediaArchive";
 import LoreCard from "./LoreCard";
 import EquipmentTile from "./EquipmentTile";
+import ApiLoading from "./ApiLoading";
 
 interface ReleaseArchiveDetailProps {
   group: LoreGroup;
   search: string;
   onOpenLore: (id: string) => void;
   onOpenCatalog: (entry: CatalogEntry) => void;
+  onOpenRaid: (raidId: string) => void;
 }
 
 type ReleaseSection = "equipment" | "lore";
@@ -36,6 +39,7 @@ export default function ReleaseArchiveDetail({
   search,
   onOpenLore,
   onOpenCatalog,
+  onOpenRaid,
 }: ReleaseArchiveDetailProps) {
   const rarities = ["Excepcional", "Leyenda", "Peculiar", "Poco común", "Común"];
   const [section, setSection] = useState<ReleaseSection>("equipment");
@@ -129,12 +133,20 @@ export default function ReleaseArchiveDetail({
   const releaseVideos = mediaEntries.filter((entry) =>
     entry.kind === "video" && entry.releaseSlug === group.releaseSlug,
   );
-  const releaseArtwork = group.releaseImageKind === "artwork" && isBungieAsset(group.releaseImageUrl)
-    ? group.releaseImageUrl
-    : null;
+  const localArtwork = getReleaseArtwork(group.releaseSlug);
+  const releaseTitle = getReleaseDisplayTitle(group.releaseSlug, group.title);
+  const releaseArtwork = localArtwork?.src
+    ?? (group.releaseImageKind === "artwork" && isBungieAsset(group.releaseImageUrl)
+      ? group.releaseImageUrl
+      : null);
+  const artworkSource = localArtwork
+    ? { url: localArtwork.sourceUrl, credit: localArtwork.credit }
+    : releaseArtwork
+      ? { url: releaseArtwork, credit: "ILUSTRACIÓN DEL MANIFIESTO · BUNGIE" }
+      : null;
 
   return (
-    <section className="release-detail" aria-label={`Archivo de ${group.title}`}>
+    <section className="release-detail" aria-label={`Archivo de ${releaseTitle}`}>
       <header className="release-overview">
         <div className={`release-overview-art${releaseArtwork ? "" : " release-overview-art-empty"}`}>
           {releaseArtwork ? (
@@ -146,16 +158,28 @@ export default function ReleaseArchiveDetail({
           ) : (
             <span>ARTE DE LA EXPANSIÓN<br />PENDIENTE</span>
           )}
-          {releaseArtwork && <small>ILUSTRACIÓN DEL MANIFIESTO · BUNGIE</small>}
+          {artworkSource?.url ? (
+            <a
+              aria-label={`Ver fuente de la imagen: ${artworkSource.credit}`}
+              className="release-art-credit"
+              href={artworkSource.url}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {artworkSource.credit} ↗
+            </a>
+          ) : artworkSource ? (
+            <span className="release-art-credit">{artworkSource.credit}</span>
+          ) : null}
         </div>
         <div className="release-overview-copy">
           <span className="eyebrow">
             {group.sourceGame === "destiny1" ? "DESTINY · LANZAMIENTO" : "DESTINY 2 · LANZAMIENTO"}
           </span>
-          <h3>{group.title}</h3>
+          <h3>{releaseTitle}</h3>
           {group.titleEn !== group.title && <p className="release-overview-original">{group.titleEn}</p>}
           <p className="release-overview-description">
-            {describeTimelineRelease(group.releaseSlug, group.title)}
+            {describeTimelineRelease(group.releaseSlug, releaseTitle)}
           </p>
           <p className="release-date">
             {`${(group.catalogItemCount ?? 0).toLocaleString("es-ES")} ITEMS · ${group.localEntryCount.toLocaleString("es-ES")} RELATOS`}
@@ -173,25 +197,33 @@ export default function ReleaseArchiveDetail({
         </div>
       </header>
 
-      <section className="release-media-section" aria-labelledby="release-media-title">
-        <div className="release-media-heading">
-          <span className="eyebrow">TRÁILERS · CINEMÁTICAS · INCURSIÓN</span>
-          <h3 id="release-media-title">Vívelo en vídeo</h3>
-          <p>Material audiovisual asociado a este lanzamiento.</p>
-        </div>
-        {group.releaseSlug === "the-dark-below" && <CrotaSpotlight />}
-        {releaseVideos.length > 0 ? (
-          <MediaArchive entries={releaseVideos} search="" />
-        ) : group.releaseSlug !== "the-dark-below" ? (
-          <div className="release-media-empty">
-            <span aria-hidden="true">▶</span>
-            <div>
-              <strong>Vídeos de este lanzamiento pendientes</strong>
-              <p>Cuando estén seleccionados, se añadirán a <code>src/data/media.ts</code> con este lanzamiento.</p>
-            </div>
+      {group.releaseSlug !== "the-taken-king-april-update" && (
+        <section className="release-media-section" aria-labelledby="release-media-title">
+          <div className="release-media-heading">
+            <span className="eyebrow">TRÁILERS · CINEMÁTICAS · INCURSIÓN</span>
+            <h3 id="release-media-title">Vívelo en vídeo</h3>
+            <p>Material audiovisual asociado a este lanzamiento.</p>
           </div>
-        ) : null}
-      </section>
+          {group.releaseSlug === "the-dark-below" ? (
+            <CrotaSpotlight
+              onOpenRaid={() => onOpenRaid("crotas-end-d1")}
+              videos={releaseVideos}
+            />
+          ) : releaseVideos.length > 0 ? (
+            <MediaArchive entries={releaseVideos} layout="selector" search="" />
+          ) : (
+            <div className="release-media-empty">
+              <span aria-hidden="true">▶</span>
+              <div>
+                <strong>Vídeos de este lanzamiento pendientes</strong>
+                {group.sourceGame !== "destiny2" && (
+                  <p>Cuando estén seleccionados, se añadirán a <code>src/data/media.ts</code> con este lanzamiento.</p>
+                )}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
 
       <section className="release-contents" aria-labelledby="release-contents-title">
         <div className="release-contents-heading">
@@ -275,6 +307,11 @@ export default function ReleaseArchiveDetail({
         )}
 
         {activeError && <p className="release-detail-message" role="alert">{activeError}</p>}
+        {activeLoading && (
+          <ApiLoading compact message={section === "equipment"
+            ? "Consultando el equipo de este lanzamiento…"
+            : "Recuperando los relatos de este lanzamiento…"} />
+        )}
         {!activeError && !activeLoading && activeResult?.items.length === 0 && (
           <div className="release-detail-message">
             {search
@@ -328,22 +365,7 @@ export default function ReleaseArchiveDetail({
   );
 }
 
-function CrotaSpotlight() {
-  const [activeVideo, setActiveVideo] = useState<"trailer" | "raid" | null>(null);
-  const videos = {
-    trailer: {
-      id: "WUEiKU0hkc0",
-      title: "Tráiler oficial de La Profunda Oscuridad",
-      note: "Tráiler oficial de la expansión, publicado por Bungie.",
-    },
-    raid: {
-      id: "zcGdeHGRxSo",
-      title: "El Fin de Crota: incursión completa",
-      note: "Recorrido completo de la raid original. Se inicia silenciado; activa el reproductor si quieres verlo.",
-    },
-  } as const;
-  const selectedVideo = activeVideo ? videos[activeVideo] : null;
-
+function CrotaSpotlight({ onOpenRaid, videos }: { onOpenRaid: () => void; videos: typeof mediaEntries }) {
   return (
     <section className="release-spotlight" aria-labelledby="crota-spotlight-title">
       <div className="release-spotlight-copy">
@@ -352,32 +374,14 @@ function CrotaSpotlight() {
         <p>Descubre la expansión y luego adéntrate en la incursión de Crota con un recorrido completo.</p>
         <div className="release-spotlight-actions">
           <button
-            aria-pressed={activeVideo === "trailer"}
-            onClick={() => setActiveVideo(activeVideo === "trailer" ? null : "trailer")}
+            onClick={onOpenRaid}
             type="button"
           >
-            VER TRÁILER OFICIAL
-          </button>
-          <button
-            aria-pressed={activeVideo === "raid"}
-            onClick={() => setActiveVideo(activeVideo === "raid" ? null : "raid")}
-            type="button"
-          >
-            VER RAID COMPLETA · SIN SONIDO
+            VER RAID Y RECORRIDO COMPLETO ↗
           </button>
         </div>
       </div>
-      {selectedVideo && (
-        <div className="release-spotlight-video">
-          <iframe
-            allow="autoplay; encrypted-media; picture-in-picture"
-            loading="lazy"
-            src={`https://www.youtube-nocookie.com/embed/${selectedVideo.id}?autoplay=1&mute=1&controls=1&playsinline=1&rel=0`}
-            title={selectedVideo.title}
-          />
-          <p>{selectedVideo.note}</p>
-        </div>
-      )}
+      <MediaArchive entries={videos} layout="selector" search="" />
     </section>
   );
 }

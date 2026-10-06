@@ -1,4 +1,5 @@
 import { raids } from "../data/raids";
+import { getRaidArtwork } from "../data/raid-artwork";
 interface RaidArchiveProps {
   game: "destiny1" | "destiny2";
   search: string;
@@ -31,13 +32,30 @@ export default function RaidArchive({ game, search, onOpenRaid }: RaidArchivePro
   return (
     <div className="raid-grid">
       {matchingRaids.map((raid) => {
+        const artwork = getRaidArtwork(raid.id);
         return (
           <article className="raid-card" key={raid.id}>
-            <div className="raid-card-art" aria-hidden="true"><span>✦</span></div>
+            <div className={`raid-card-art${artwork ? " raid-card-art-with-image" : ""}`} aria-hidden="true">
+              {artwork ? (
+                <img
+                  alt=""
+                  loading="lazy"
+                  onError={(event) => { event.currentTarget.hidden = true; }}
+                  src={artwork.src}
+                />
+              ) : (
+                <span>✦</span>
+              )}
+            </div>
             <div className="raid-card-copy">
               <span className="eyebrow">{raid.label}</span>
               <h3>{raid.title}</h3>
               <p>{raid.titleEn}</p>
+              {artwork && (
+                <a className="raid-card-art-credit" href={artwork.sourceUrl} rel="noreferrer" target="_blank">
+                  IMAGEN: BUNGIE · FUENTE ↗
+                </a>
+              )}
               <button onClick={() => onOpenRaid(raid.id)} type="button">
                 VER BOTÍN Y GUÍA COMPLETA <span aria-hidden="true">↗</span>
               </button>

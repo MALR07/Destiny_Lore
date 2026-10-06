@@ -76,43 +76,68 @@ async function main() {
         return `($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4}, $${offset + 5}, $${offset + 6}, $${offset + 7}, $${offset + 8}, $${offset + 9})`;
       });
       const result = await client.query(
-        `INSERT INTO release_catalog_entries (release_slug, catalog_entry_id, ishtar_item_slug)
-         SELECT mapped.release_slug, MIN(item.id), mapped.ishtar_item_slug
-         FROM (VALUES ${rows.join(", ")})
-           AS mapped(
-             release_slug, source_game, title_en, icon_url, category,
-             class_type, rarity, item_type, ishtar_item_slug
-           )
-         JOIN game_catalog_entries item
-           ON item.source_game = mapped.source_game
-           AND item.title_en = mapped.title_en
-           AND item.category = mapped.category
-           AND item.class_type IS NOT DISTINCT FROM mapped.class_type
-           AND item.rarity IS NOT DISTINCT FROM mapped.rarity
-           AND item.item_type IS NOT DISTINCT FROM mapped.item_type
-           AND (
-             item.icon_url = mapped.icon_url
-             OR item.image_url = mapped.icon_url
-             OR (SELECT COUNT(*)
-                 FROM game_catalog_entries title_match
-                 WHERE title_match.source_game = mapped.source_game
-                   AND title_match.title_en = mapped.title_en
-                   AND title_match.category = mapped.category
-                   AND title_match.class_type IS NOT DISTINCT FROM mapped.class_type
-                   AND title_match.rarity IS NOT DISTINCT FROM mapped.rarity
-                   AND title_match.item_type IS NOT DISTINCT FROM mapped.item_type) = 1
-           )
-         GROUP BY mapped.release_slug, mapped.source_game, mapped.title_en,
-                  mapped.icon_url, mapped.category, mapped.class_type, mapped.rarity,
-                  mapped.item_type, mapped.ishtar_item_slug
-         ON CONFLICT (release_slug, catalog_entry_id)
-         DO UPDATE SET ishtar_item_slug = EXCLUDED.ishtar_item_slug`,
+        `WITH resolved AS (
+           SELECT mapped.release_slug, MIN(item.id) AS catalog_entry_id, mapped.ishtar_item_slug
+           FROM (VALUES ${rows.join(", ")})
+             AS mapped(
+               release_slug, source_game, title_en, icon_url, category,
+               class_type, rarity, item_type, ishtar_item_slug
+             )
+           JOIN game_catalog_entries item
+             ON item.source_game = mapped.source_game
+             AND item.title_en = mapped.title_en
+             AND item.category = mapped.category
+             AND item.class_type IS NOT DISTINCT FROM mapped.class_type::smallint
+             AND (
+               item.icon_url = mapped.icon_url
+               OR item.image_url = mapped.icon_url
+               OR (SELECT COUNT(*)
+                   FROM game_catalog_entries metadata_match
+                   WHERE metadata_match.source_game = mapped.source_game
+                     AND metadata_match.title_en = mapped.title_en
+                     AND metadata_match.category = mapped.category
+                     AND metadata_match.class_type IS NOT DISTINCT FROM mapped.class_type::smallint
+                     AND metadata_match.rarity IS NOT DISTINCT FROM mapped.rarity
+                     AND metadata_match.item_type IS NOT DISTINCT FROM mapped.item_type) = 1
+                OR (SELECT COUNT(*)
+                    FROM game_catalog_entries title_match
+                    WHERE title_match.source_game = mapped.source_game
+                      AND title_match.title_en = mapped.title_en
+                      AND title_match.category = mapped.category
+                      AND title_match.class_type IS NOT DISTINCT FROM mapped.class_type::smallint) = 1
+             )
+           GROUP BY mapped.release_slug, mapped.source_game, mapped.title_en,
+                    mapped.icon_url, mapped.category, mapped.class_type, mapped.rarity,
+                    mapped.item_type, mapped.ishtar_item_slug
+         ),
+         unique_resolved AS (
+           SELECT DISTINCT ON (release_slug, catalog_entry_id)
+                  release_slug, catalog_entry_id, ishtar_item_slug
+           FROM resolved
+           ORDER BY release_slug, catalog_entry_id, ishtar_item_slug
+         ),
+         inserted AS (
+           INSERT INTO release_catalog_entries (release_slug, catalog_entry_id, ishtar_item_slug)
+           SELECT release_slug, catalog_entry_id, ishtar_item_slug
+           FROM unique_resolved
+           ON CONFLICT (release_slug, catalog_entry_id)
+           DO UPDATE SET ishtar_item_slug = EXCLUDED.ishtar_item_slug
+           RETURNING 1
+         )
+         SELECT (SELECT COUNT(*)::int FROM resolved) AS resolved_count,
+                (SELECT COUNT(*)::int FROM inserted) AS associated_count`,
         values,
       );
-      if (result.rowCount < batch.length) {
+      const { resolved_count: resolvedCount, associated_count: associatedCount } = result.rows[0];
+      if (resolvedCount < batch.length) {
         throw new Error(
-          `Solo se resolvieron ${result.rowCount} de ${batch.length} items oficiales ` +
+          `Solo se resolvieron ${resolvedCount} de ${batch.length} items oficiales ` +
           `en el lote ${Math.floor(start / BATCH_SIZE) + 1}. Comprueba la sincronización de catálogos.`,
+        );
+      }
+      if (associatedCount < resolvedCount) {
+        console.log(
+          `  ${resolvedCount - associatedCount} asignaciones duplicadas del lote ${Math.floor(start / BATCH_SIZE) + 1} se consolidaron.`,
         );
       }
     }

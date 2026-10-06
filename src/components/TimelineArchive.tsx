@@ -71,7 +71,7 @@ export default function TimelineArchive({
           const slug = release.releaseSlug;
           const releaseBooks = slug ? booksByRelease.get(slug) ?? [] : [];
           const videos = media.filter((entry) =>
-            entry.kind === "video" && entry.language === "es" && entry.releaseSlug === slug,
+            entry.kind === "video" && entry.releaseSlug === slug,
           );
 
           return (
@@ -122,7 +122,7 @@ export default function TimelineArchive({
                 )}
                 {videos.length > 0 && (
                   <div className="timeline-videos">
-                    <span className="eyebrow">CINEMÁTICAS EN ESPAÑOL</span>
+                    <span className="eyebrow">VÍDEOS DEL LANZAMIENTO</span>
                     <MediaArchive entries={videos} search="" />
                   </div>
                 )}

@@ -2,6 +2,7 @@ import type { LoreGroup, LoreGroupType } from "../types/lore";
 import { isBungieAsset } from "../lib/bungie-assets";
 import { getReleaseIconUrl } from "../lib/release-icons";
 import { getLoreBookCover } from "../lib/book-covers";
+import { getReleaseDisplayTitle } from "../data/release-artwork";
 
 interface LoreGroupIndexProps {
   groups: LoreGroup[];
@@ -23,7 +24,7 @@ export default function LoreGroupIndex({ groups, type, onSelect }: LoreGroupInde
             <article className="release-card" key={group.id}>
               <button className="release-card-main" onClick={() => onSelect(group)} type="button">
                 <span className="release-index-number">{group.releaseNumber ?? group.releaseOrder ?? index + 1}</span>
-                <strong className="release-index-name">{group.title}</strong>
+                <strong className="release-index-name">{getReleaseDisplayTitle(group.releaseSlug, group.title)}</strong>
                 <span className="release-index-docs">
                   {`${(group.catalogItemCount ?? 0).toLocaleString("es-ES")} objetos · ${group.localEntryCount.toLocaleString("es-ES")} relatos`}
                 </span>
@@ -37,7 +38,9 @@ export default function LoreGroupIndex({ groups, type, onSelect }: LoreGroupInde
                     />
                   </span>
                 )}
-                <span className="release-index-link">Ver registros de {group.title} →</span>
+                <span className="release-index-link">
+                  Ver registros de {getReleaseDisplayTitle(group.releaseSlug, group.title)} →
+                </span>
               </button>
             </article>
           ))}
