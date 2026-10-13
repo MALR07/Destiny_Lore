@@ -1,5 +1,5 @@
 # Archivo del Viajero
-
+!Archivo del Viajero Logo](/public/archivo.png)
 Archivo en español para explorar Destiny 1 y Destiny 2: lore, equipo, personajes, lugares, lanzamientos, cinemáticas y línea temporal. Incluye búsqueda, fichas localizadas y colecciones de items organizadas por lanzamiento.
 
 ## Stack
