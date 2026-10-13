@@ -71512,35 +71512,6 @@
     },
     {
       "sourceGame": "destiny2",
-      "titleEn": "Episode: Echoes",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/6c1e622cf536550c0cfb8ded4605d725.jpg",
-      "category": "objects",
-      "classType": null,
-      "itemType": null,
-      "ishtarItemSlug": "episode-echoes-2"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Episode: Echoes Shader Pack",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Paquete",
-      "ishtarItemSlug": "episode-echoes-shader-bundle"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Episode: Echoes Starter Pack",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Paquete",
-      "ishtarItemSlug": "episode-echoes-starter-bundle"
-    },
-    {
-      "sourceGame": "destiny2",
       "titleEn": "Episode Ends Soon",
       "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/6c1e622cf536550c0cfb8ded4605d725.jpg",
       "category": "objects",
@@ -74103,16 +74074,6 @@
       "rarity": "Leyenda",
       "itemType": "Diseño de arma",
       "ishtarItemSlug": "nines-interval"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "No Hesitation",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/76e983294a061fc355ca67539d569d25.jpg",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Fusil automático",
-      "ishtarItemSlug": "no-hesitation"
     },
     {
       "sourceGame": "destiny2",
@@ -77298,16 +77259,6 @@
     },
     {
       "sourceGame": "destiny2",
-      "titleEn": "The Call",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/dbf23a6cf171320a771a17f9b5191b43.jpg",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Pistola",
-      "ishtarItemSlug": "the-call"
-    },
-    {
-      "sourceGame": "destiny2",
       "titleEn": "The Chopper Pack",
       "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
       "category": "objects",
@@ -78939,6 +78890,57 @@
       "itemType": "Cañón de mano",
       "ishtarItemSlug": "zaoulis-bane-harrowed-3"
     }
+  ],
+  "episode-echoes": [
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Episode: Echoes",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/6c1e622cf536550c0cfb8ded4605d725.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "itemType":  null,
+          "ishtarItemSlug":  "episode-echoes-2"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Episode: Echoes Shader Pack",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Paquete",
+          "ishtarItemSlug":  "episode-echoes-shader-bundle"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Episode: Echoes Starter Pack",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Paquete",
+          "ishtarItemSlug":  "episode-echoes-starter-bundle"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "No Hesitation",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/76e983294a061fc355ca67539d569d25.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Fusil automático",
+          "ishtarItemSlug":  "no-hesitation"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "The Call",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/dbf23a6cf171320a771a17f9b5191b43.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Pistola",
+          "ishtarItemSlug":  "the-call"
+      }
   ],
   "season-of-the-wish": [
     {
@@ -101284,15 +101286,6 @@
   "lightfall": [
     {
       "sourceGame": "destiny2",
-      "titleEn": "10-Rank Bundle for Season of Defiance",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/cb4c91c8b2d435000ed86a95f63efef6.jpg",
-      "category": "objects",
-      "classType": null,
-      "itemType": null,
-      "ishtarItemSlug": "10-rank-bundle-for-season-of-defiance"
-    },
-    {
-      "sourceGame": "destiny2",
       "titleEn": "Abeyant Leap",
       "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/8ca0dc9ac4166580356aa2d1f243e009.jpg",
       "category": "objects",
@@ -107913,26 +107906,6 @@
     },
     {
       "sourceGame": "destiny2",
-      "titleEn": "Queensguard Projection",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/05293c0397fb26dc18e66e65a66a66df.jpg",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Proyección de Espectro",
-      "ishtarItemSlug": "queensguard-projection"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Queensguard Valor",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/36f07c30e7e7d87a16db1af7898c07ea.jpg",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Shader",
-      "ishtarItemSlug": "queensguard-valor"
-    },
-    {
-      "sourceGame": "destiny2",
       "titleEn": "Quick Cardio",
       "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/f6ee2abb6755b10bdcaa3e2228e412d0.jpg",
       "category": "objects",
@@ -108306,44 +108279,6 @@
       "classType": null,
       "itemType": "Común",
       "ishtarItemSlug": "seasonal-challenges-unlocked"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Season of Defiance +10-Rank Bundle",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/55281a7a1a399be1fce4d02427a0e0fb.jpg",
-      "category": "objects",
-      "classType": null,
-      "itemType": null,
-      "ishtarItemSlug": "season-of-defiance-10-rank-bundle"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Season of Defiance",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/099cb8eb6992d058e8b542ba64af606c.jpg",
-      "category": "objects",
-      "classType": null,
-      "itemType": null,
-      "ishtarItemSlug": "season-of-defiance-2"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Season of Defiance Projections Pack",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Paquete",
-      "ishtarItemSlug": "season-of-defiance-projections-bundle"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Season of Defiance Starter Pack",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Paquete",
-      "ishtarItemSlug": "season-of-defiance-starter-pack"
     },
     {
       "sourceGame": "destiny2",
@@ -110876,6 +110811,75 @@
       "itemType": "Fusil de pulsos",
       "ishtarItemSlug": "yesteryear-4"
     }
+  ],
+  "season-of-defiance": [
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "10-Rank Bundle for Season of Defiance",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/cb4c91c8b2d435000ed86a95f63efef6.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "itemType":  null,
+          "ishtarItemSlug":  "10-rank-bundle-for-season-of-defiance"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Queensguard Projection",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/05293c0397fb26dc18e66e65a66a66df.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Proyección de Espectro",
+          "ishtarItemSlug":  "queensguard-projection"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Queensguard Valor",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/36f07c30e7e7d87a16db1af7898c07ea.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Shader",
+          "ishtarItemSlug":  "queensguard-valor"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of Defiance +10-Rank Bundle",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/55281a7a1a399be1fce4d02427a0e0fb.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "itemType":  null,
+          "ishtarItemSlug":  "season-of-defiance-10-rank-bundle"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of Defiance",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/099cb8eb6992d058e8b542ba64af606c.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "itemType":  null,
+          "ishtarItemSlug":  "season-of-defiance-2"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of Defiance Projections Pack",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Paquete",
+          "ishtarItemSlug":  "season-of-defiance-projections-bundle"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of Defiance Starter Pack",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Paquete",
+          "ishtarItemSlug":  "season-of-defiance-starter-pack"
+      }
   ],
   "season-of-the-seraph": [
     {
@@ -131834,26 +131838,6 @@
     },
     {
       "sourceGame": "destiny2",
-      "titleEn": "Reckless Endangerment",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/8ad4bf8073f313cddec7e02b6b3c72ed.jpg",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Escopeta",
-      "ishtarItemSlug": "reckless-endangerment"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Reckless Endangerment",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/8ad4bf8073f313cddec7e02b6b3c72ed.jpg",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Común",
-      "itemType": "Escopeta",
-      "ishtarItemSlug": "reckless-endangerment"
-    },
-    {
-      "sourceGame": "destiny2",
       "titleEn": "Recombination",
       "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/6f61697efee46bbd14e712deb5f07dc4.png",
       "category": "objects",
@@ -132304,16 +132288,6 @@
     },
     {
       "sourceGame": "destiny2",
-      "titleEn": "Risen Projection",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/193694bce8677536cd2849991fad8f0e.jpg",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Proyección de Espectro",
-      "ishtarItemSlug": "risen-projection"
-    },
-    {
-      "sourceGame": "destiny2",
       "titleEn": "Portal Glimmer Boost I",
       "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/ee35c93fe64836b46e8113c1210c5283.png",
       "category": "objects",
@@ -132430,45 +132404,6 @@
       "rarity": "Excepcional",
       "itemType": "Intrínseco",
       "ishtarItemSlug": "screaming-swarm"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Season of the Risen",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/71a8a1ea8181fc76ca6b856d5f0a6b6f.jpg",
-      "category": "objects",
-      "classType": null,
-      "itemType": null,
-      "ishtarItemSlug": "season-of-the-risen-2"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Season of the Risen Exotic Emote Pack",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Paquete",
-      "ishtarItemSlug": "season-of-the-risen-exotic-emote-pack"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Season of the Risen Projections Pack",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Paquete",
-      "ishtarItemSlug": "season-of-the-risen-projections-bundle"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Season of the Risen Starter Pack",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
-      "category": "objects",
-      "classType": null,
-      "rarity": "Leyenda",
-      "itemType": "Paquete",
-      "ishtarItemSlug": "season-of-the-risen-starter-pack"
     },
     {
       "sourceGame": "destiny2",
@@ -134204,150 +134139,6 @@
     },
     {
       "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Bond",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/950963812.jpg",
-      "category": "armor",
-      "classType": 2,
-      "rarity": "Leyenda",
-      "itemType": "Banda de hechiceros",
-      "ishtarItemSlug": "tusked-allegiance-bond"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Boots",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/693728753.jpg",
-      "category": "armor",
-      "classType": 2,
-      "itemType": "Leyenda",
-      "ishtarItemSlug": "tusked-allegiance-boots"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Cloak",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/3473867303.jpg",
-      "category": "armor",
-      "classType": 1,
-      "rarity": "Leyenda",
-      "itemType": "Capa de cazadores",
-      "ishtarItemSlug": "tusked-allegiance-cloak"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Gauntlets",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/187431790.jpg",
-      "category": "armor",
-      "classType": 0,
-      "rarity": "Leyenda",
-      "itemType": "Guanteletes",
-      "ishtarItemSlug": "tusked-allegiance-gauntlets"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Gloves",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/119228495.jpg",
-      "category": "armor",
-      "classType": 2,
-      "rarity": "Leyenda",
-      "itemType": "Guanteletes",
-      "ishtarItemSlug": "tusked-allegiance-gloves"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Greaves",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/2270509928.jpg",
-      "category": "armor",
-      "classType": 0,
-      "itemType": "Leyenda",
-      "ishtarItemSlug": "tusked-allegiance-greaves"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Grips",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/4017738218.jpg",
-      "category": "armor",
-      "classType": 1,
-      "rarity": "Leyenda",
-      "itemType": "Guanteletes",
-      "ishtarItemSlug": "tusked-allegiance-grips"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Helmet",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/2240729575.jpg",
-      "category": "armor",
-      "classType": 0,
-      "rarity": "Leyenda",
-      "itemType": "Casco",
-      "ishtarItemSlug": "tusked-allegiance-helmet"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Hood",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/849255710.jpg",
-      "category": "armor",
-      "classType": 2,
-      "rarity": "Leyenda",
-      "itemType": "Casco",
-      "ishtarItemSlug": "tusked-allegiance-hood"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Mark",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/3957071315.jpg",
-      "category": "armor",
-      "classType": 0,
-      "rarity": "Leyenda",
-      "itemType": "Distintivo de titanes",
-      "ishtarItemSlug": "tusked-allegiance-mark"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Mask",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/2516879931.jpg",
-      "category": "armor",
-      "classType": 1,
-      "rarity": "Leyenda",
-      "itemType": "Casco",
-      "ishtarItemSlug": "tusked-allegiance-mask"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Plate",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/438108034.jpg",
-      "category": "armor",
-      "classType": 0,
-      "itemType": "Leyenda",
-      "ishtarItemSlug": "tusked-allegiance-plate"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Robes",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/3465627817.jpg",
-      "category": "armor",
-      "classType": 2,
-      "itemType": "Leyenda",
-      "ishtarItemSlug": "tusked-allegiance-robes"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Strides",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/3056950148.jpg",
-      "category": "armor",
-      "classType": 1,
-      "itemType": "Leyenda",
-      "ishtarItemSlug": "tusked-allegiance-strides"
-    },
-    {
-      "sourceGame": "destiny2",
-      "titleEn": "Tusked Allegiance Vest",
-      "iconUrl": "https://www.bungie.net/common/destiny2_content/screenshots/4144240158.jpg",
-      "category": "armor",
-      "classType": 1,
-      "itemType": "Leyenda",
-      "ishtarItemSlug": "tusked-allegiance-vest"
-    },
-    {
-      "sourceGame": "destiny2",
       "titleEn": "Typhon GL5",
       "iconUrl": "https://www.bungie.net/common/destiny2_content/icons/cfe964ddfd984e57cfc240d990a20809.jpg",
       "category": "objects",
@@ -135312,6 +135103,221 @@
       "itemType": "Rasgo",
       "ishtarItemSlug": "zen-moment-2"
     }
+  ],
+  "season-of-the-risen": [
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Reckless Endangerment",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/8ad4bf8073f313cddec7e02b6b3c72ed.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Escopeta",
+          "ishtarItemSlug":  "reckless-endangerment"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Reckless Endangerment",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/8ad4bf8073f313cddec7e02b6b3c72ed.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Común",
+          "itemType":  "Escopeta",
+          "ishtarItemSlug":  "reckless-endangerment"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Risen Projection",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/193694bce8677536cd2849991fad8f0e.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Proyección de Espectro",
+          "ishtarItemSlug":  "risen-projection"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of the Risen",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/71a8a1ea8181fc76ca6b856d5f0a6b6f.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "itemType":  null,
+          "ishtarItemSlug":  "season-of-the-risen-2"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of the Risen Exotic Emote Pack",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Paquete",
+          "ishtarItemSlug":  "season-of-the-risen-exotic-emote-pack"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of the Risen Projections Pack",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Paquete",
+          "ishtarItemSlug":  "season-of-the-risen-projections-bundle"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of the Risen Starter Pack",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/7d40d7dfd49abaf954f9cf473fce0f77.png",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Paquete",
+          "ishtarItemSlug":  "season-of-the-risen-starter-pack"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Bond",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/950963812.jpg",
+          "category":  "armor",
+          "classType":  2,
+          "rarity":  "Leyenda",
+          "itemType":  "Banda de hechiceros",
+          "ishtarItemSlug":  "tusked-allegiance-bond"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Boots",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/693728753.jpg",
+          "category":  "armor",
+          "classType":  2,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "tusked-allegiance-boots"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Cloak",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3473867303.jpg",
+          "category":  "armor",
+          "classType":  1,
+          "rarity":  "Leyenda",
+          "itemType":  "Capa de cazadores",
+          "ishtarItemSlug":  "tusked-allegiance-cloak"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Gauntlets",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/187431790.jpg",
+          "category":  "armor",
+          "classType":  0,
+          "rarity":  "Leyenda",
+          "itemType":  "Guanteletes",
+          "ishtarItemSlug":  "tusked-allegiance-gauntlets"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Gloves",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/119228495.jpg",
+          "category":  "armor",
+          "classType":  2,
+          "rarity":  "Leyenda",
+          "itemType":  "Guanteletes",
+          "ishtarItemSlug":  "tusked-allegiance-gloves"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Greaves",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2270509928.jpg",
+          "category":  "armor",
+          "classType":  0,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "tusked-allegiance-greaves"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Grips",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/4017738218.jpg",
+          "category":  "armor",
+          "classType":  1,
+          "rarity":  "Leyenda",
+          "itemType":  "Guanteletes",
+          "ishtarItemSlug":  "tusked-allegiance-grips"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Helmet",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2240729575.jpg",
+          "category":  "armor",
+          "classType":  0,
+          "rarity":  "Leyenda",
+          "itemType":  "Casco",
+          "ishtarItemSlug":  "tusked-allegiance-helmet"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Hood",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/849255710.jpg",
+          "category":  "armor",
+          "classType":  2,
+          "rarity":  "Leyenda",
+          "itemType":  "Casco",
+          "ishtarItemSlug":  "tusked-allegiance-hood"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Mark",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3957071315.jpg",
+          "category":  "armor",
+          "classType":  0,
+          "rarity":  "Leyenda",
+          "itemType":  "Distintivo de titanes",
+          "ishtarItemSlug":  "tusked-allegiance-mark"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Mask",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2516879931.jpg",
+          "category":  "armor",
+          "classType":  1,
+          "rarity":  "Leyenda",
+          "itemType":  "Casco",
+          "ishtarItemSlug":  "tusked-allegiance-mask"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Plate",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/438108034.jpg",
+          "category":  "armor",
+          "classType":  0,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "tusked-allegiance-plate"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Robes",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3465627817.jpg",
+          "category":  "armor",
+          "classType":  2,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "tusked-allegiance-robes"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Strides",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3056950148.jpg",
+          "category":  "armor",
+          "classType":  1,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "tusked-allegiance-strides"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Tusked Allegiance Vest",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/4144240158.jpg",
+          "category":  "armor",
+          "classType":  1,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "tusked-allegiance-vest"
+      }
   ],
   "season-of-the-lost": [
     {
@@ -158729,6 +158735,260 @@
       "ishtarItemSlug": "yesterdays-augur"
     }
   ],
+  "season-of-the-hunt": [
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Blast Battue",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2453357042.jpg",
+          "category":  "weapons",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Lanzagranadas",
+          "ishtarItemSlug":  "blast-battue"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Corsair\u0027s Wrath",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2714022207.jpg",
+          "category":  "weapons",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Fusil de fusión lineal",
+          "ishtarItemSlug":  "corsairs-wrath"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Deafening Whisper",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/981718087.jpg",
+          "category":  "weapons",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Lanzagranadas",
+          "ishtarItemSlug":  "deafening-whisper"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Friction Fire",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/1513993763.jpg",
+          "category":  "weapons",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Subfusil",
+          "ishtarItemSlug":  "friction-fire"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Hawkmoon",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3856705927.jpg",
+          "category":  "weapons",
+          "classType":  null,
+          "rarity":  "Excepcional",
+          "itemType":  "Cañón de mano",
+          "ishtarItemSlug":  "hawkmoon-3"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Royal Chase",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2776503072.jpg",
+          "category":  "weapons",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Fusil de explorador",
+          "ishtarItemSlug":  "royal-chase"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of the Hunt Projections Pack",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/cc299f946d38eda5392d51d00e8dd193.png",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Paquete",
+          "ishtarItemSlug":  "season-of-the-hunt-projections-bundle"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of the Hunt Starter Pack",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/309dad1e89fe65df8ac06d67edd82c87.png",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Paquete",
+          "ishtarItemSlug":  "season-of-the-hunt-starter-pack"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Bond",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2055947316.jpg",
+          "category":  "armor",
+          "classType":  2,
+          "rarity":  "Leyenda",
+          "itemType":  "Banda de hechiceros",
+          "ishtarItemSlug":  "wild-hunt-bond"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Boots",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/197764097.jpg",
+          "category":  "armor",
+          "classType":  2,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "wild-hunt-boots"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Cloak",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/1148770067.jpg",
+          "category":  "armor",
+          "classType":  1,
+          "rarity":  "Leyenda",
+          "itemType":  "Capa de cazadores",
+          "ishtarItemSlug":  "wild-hunt-cloak"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Gauntlets",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2545401128.jpg",
+          "category":  "armor",
+          "classType":  0,
+          "rarity":  "Leyenda",
+          "itemType":  "Guanteletes",
+          "ishtarItemSlug":  "wild-hunt-gauntlets"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Gloves",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/1276513983.jpg",
+          "category":  "armor",
+          "classType":  2,
+          "rarity":  "Leyenda",
+          "itemType":  "Guanteletes",
+          "ishtarItemSlug":  "wild-hunt-gloves"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Grasps",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2025716654.jpg",
+          "category":  "armor",
+          "classType":  1,
+          "rarity":  "Leyenda",
+          "itemType":  "Guanteletes",
+          "ishtarItemSlug":  "wild-hunt-grasps"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Greaves",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3180809346.jpg",
+          "category":  "armor",
+          "classType":  0,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "wild-hunt-greaves"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Helm",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3887272785.jpg",
+          "category":  "armor",
+          "classType":  0,
+          "rarity":  "Leyenda",
+          "itemType":  "Casco",
+          "ishtarItemSlug":  "wild-hunt-helm"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Hood",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/251310542.jpg",
+          "category":  "armor",
+          "classType":  2,
+          "rarity":  "Leyenda",
+          "itemType":  "Casco",
+          "ishtarItemSlug":  "wild-hunt-hood"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Mark",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2279193565.jpg",
+          "category":  "armor",
+          "classType":  0,
+          "rarity":  "Leyenda",
+          "itemType":  "Distintivo de titanes",
+          "ishtarItemSlug":  "wild-hunt-mark"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Mask",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/4079117607.jpg",
+          "category":  "armor",
+          "classType":  1,
+          "rarity":  "Leyenda",
+          "itemType":  "Casco",
+          "ishtarItemSlug":  "wild-hunt-mask"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Plate",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3351935136.jpg",
+          "category":  "armor",
+          "classType":  0,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "wild-hunt-plate"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Strides",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/238284968.jpg",
+          "category":  "armor",
+          "classType":  1,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "wild-hunt-strides"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Vest",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/1458739906.jpg",
+          "category":  "armor",
+          "classType":  1,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "wild-hunt-vest"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wild Hunt Vestment",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/317220729.jpg",
+          "category":  "armor",
+          "classType":  2,
+          "itemType":  "Leyenda",
+          "ishtarItemSlug":  "wild-hunt-vestment"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Wrathborn Raid Banner Unlock",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/172843fc1aa13d802c30722d7663bed4.png",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Común",
+          "itemType":  "Bonificación de temporada",
+          "ishtarItemSlug":  "wrathborn-raid-banner-unlock"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of the Hunt",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/9b6816b0df013c8a90931af9205a0351.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "itemType":  null,
+          "ishtarItemSlug":  "season-of-the-hunt-2"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of the Hunt",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/a4082a034741bd09820221a2aec5263f.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "itemType":  "Pase archivado",
+          "ishtarItemSlug":  "season-of-the-hunt-3"
+      }
+  ],
   "season-of-arrivals": [
     {
       "sourceGame": "destiny2",
@@ -180578,6 +180838,206 @@
       "itemType": "Fusil de fusión",
       "ishtarItemSlug": "zealots-reward"
     }
+  ],
+  "season-of-the-undying": [
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Bond",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3546428481.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de hechicero",
+          "ishtarItemSlug":  "phenotype-plasticity-bond"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Boots",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3856855806.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de hechicero",
+          "ishtarItemSlug":  "phenotype-plasticity-boots"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Cloak",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/1818257532.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de cazador",
+          "ishtarItemSlug":  "phenotype-plasticity-cloak"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Gauntlets",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/1987423005.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de titán",
+          "ishtarItemSlug":  "phenotype-plasticity-gauntlets"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Gloves",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3569117172.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de hechicero",
+          "ishtarItemSlug":  "phenotype-plasticity-gloves"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Greaves",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/3928591295.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de titán",
+          "ishtarItemSlug":  "phenotype-plasticity-greaves"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Grips",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/664533719.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de cazador",
+          "ishtarItemSlug":  "phenotype-plasticity-grips"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Helm",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2040228420.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de titán",
+          "ishtarItemSlug":  "phenotype-plasticity-helm"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Hood",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2830017061.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de hechicero",
+          "ishtarItemSlug":  "phenotype-plasticity-hood"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Mark",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/1491954330.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de titán",
+          "ishtarItemSlug":  "phenotype-plasticity-mark"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Mask",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/1650573830.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de cazador",
+          "ishtarItemSlug":  "phenotype-plasticity-mask"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Plate",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2210147491.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de titán",
+          "ishtarItemSlug":  "phenotype-plasticity-plate"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Robes",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/1313704204.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de hechicero",
+          "ishtarItemSlug":  "phenotype-plasticity-robes"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Strides",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/2473068537.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de cazador",
+          "ishtarItemSlug":  "phenotype-plasticity-strides"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Phenotype Plasticity Vest",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/screenshots/1035752481.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Diseño universal de cazador",
+          "ishtarItemSlug":  "phenotype-plasticity-vest"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Pluperfect",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/45ce335d0d14197cfd2a1ef2bffd5fdc.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Fusil automático",
+          "ishtarItemSlug":  "pluperfect"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Temporal Clause",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/6259b7dba1d1c0897da675e58f456ec3.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Ametralladora",
+          "ishtarItemSlug":  "temporal-clause"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Undying Finishers Pack",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/4c36a0f7493851d6339bb8f9848cf281.png",
+          "category":  "objects",
+          "classType":  null,
+          "rarity":  "Leyenda",
+          "itemType":  "Paquete",
+          "ishtarItemSlug":  "undying-finishers-bundle"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of the Undying",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/93b9296c1f46fbb6d0c41d9edbb441e1.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "itemType":  null,
+          "ishtarItemSlug":  "season-of-the-undying-2"
+      },
+      {
+          "sourceGame":  "destiny2",
+          "titleEn":  "Season of the Undying",
+          "iconUrl":  "https://www.bungie.net/common/destiny2_content/icons/8316256ff04793daf481718c8c992f0f.jpg",
+          "category":  "objects",
+          "classType":  null,
+          "itemType":  "Pase archivado",
+          "ishtarItemSlug":  "season-of-the-undying-3"
+      }
   ],
   "season-of-opulence": [
     {

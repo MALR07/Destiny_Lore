@@ -405,7 +405,7 @@ export default function App() {
                   ? selectedGroup.title
                   : archiveMode === "catalog"
                   ? "Índice del universo"
-                    : groupHeading ?? "Relatos recuperados"}
+                  : groupHeading ?? "Relatos recuperados"}
               </h2>
             </div>
             <p>
@@ -687,7 +687,13 @@ export default function App() {
             />
           )}
 
-          {!error && !(archiveMode === "releases" && selectedGroup) && (!isGroupMode || selectedGroup) && (archiveMode === "catalog" ? catalogResult?.items.length           : archiveMode === "lore" || (archiveMode === "books" && selectedGroup) ? result?.items.length : false) ? (
+          {!error && !(archiveMode === "releases" && selectedGroup) && (!isGroupMode || selectedGroup) && (
+            archiveMode === "catalog"
+              ? catalogResult?.items.length
+              : archiveMode === "lore" || (archiveMode === "books" && selectedGroup)
+                ? result?.items.length
+                : false
+          ) ? (
             archiveMode === "lore" || archiveMode === "books" ? (
               <div className="lore-grid">
                 {result?.items.map((entry) => (

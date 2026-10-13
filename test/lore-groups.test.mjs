@@ -156,6 +156,27 @@ test("merges locally classified books into the matching release without losing B
   assert.ok(releases.every((release) => knownReleases.some(({ slug }) => slug === release.releaseSlug)));
 });
 
+test("matches localized episode labels to their official Bungie release groups", () => {
+  const [episode] = mergeKnownReleases([{
+    groupType: "release",
+    sourceGame: "destiny2",
+    bungieId: "episode-heresy",
+    titleEn: "Heresy",
+    titleEs: "Herejía",
+    loreHashes: [],
+  }], [{
+    slug: "heresy",
+    title: "Episode: Heresy",
+    titleEs: "Episodio: Herejía",
+    sourceGame: "destiny2",
+    releaseOrder: 1,
+  }]);
+
+  assert.equal(episode.bungieId, "episode-heresy");
+  assert.equal(episode.releaseSlug, "heresy");
+  assert.equal(episode.titleEs, "Herejía");
+});
+
 test("rejects editorial mappings to a release that is not in the local release index", () => {
   assert.throws(
     () => mapLoreGroups({}, {}, {}, {}, {}, { missing: ["A Book"] }, [], sourceUrls),
@@ -187,7 +208,7 @@ test("the editorial book map only references known releases and has unique title
     .trim();
 
   assert.ok(Object.keys(bookIndex).every((slug) => releaseSlugs.has(slug)));
-  assert.equal(releaseIndex.length, 37);
+  assert.equal(releaseIndex.length, 42);
   assert.equal(bookTitles.length, 110);
   assert.equal(bookTitles.length, new Set(bookTitles.map(normalizeTitle)).size);
 });
@@ -215,11 +236,12 @@ test("maps official Destiny 1 card hashes into the Taken King and House of Wolve
   const books = mapD1EditorialBooks(d1BookIndex, releases, d1LoreEntries);
   const booksOfSorrow = books.find((book) => book.bungieId === "d1-book:books-of-sorrow");
   const maraid = books.find((book) => book.bungieId === "d1-book:the-maraid");
+  const takenKingReleaseOrder = releases.find(({ slug }) => slug === "the-taken-king").releaseOrder;
 
   assert.equal(books.length, 2);
   assert.deepEqual(
     { sourceGame: booksOfSorrow.sourceGame, releaseSlug: booksOfSorrow.releaseSlug, releaseOrder: booksOfSorrow.releaseOrder },
-    { sourceGame: "destiny1", releaseSlug: "the-taken-king", releaseOrder: 34 },
+    { sourceGame: "destiny1", releaseSlug: "the-taken-king", releaseOrder: takenKingReleaseOrder },
   );
   assert.equal(booksOfSorrow.titleEs, "Libros del pesar");
   assert.equal(booksOfSorrow.loreHashes.length, 52);

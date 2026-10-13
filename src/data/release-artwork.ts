@@ -46,7 +46,7 @@ const DESTINY_2_RELEASE_ARTWORK: Readonly<Record<string, ReleaseArtwork>> = {
     credit: "ARTE DE BUNGIE · TEMPORADA DE LA OPULENCIA",
   },
   shadowkeep: {
-    src: "/media/site-art/lanzamientos/destiny2/perdidos%202.jpg",
+    src: "/media/site-art/lanzamientos/destiny2/140517-destiny_2_bastion%20sombrasn.jpg",
     sourceUrl: null,
     credit: "ARTE DE BUNGIE · BASTIÓN DE SOMBRAS",
   },
@@ -70,6 +70,11 @@ const DESTINY_2_RELEASE_ARTWORK: Readonly<Record<string, ReleaseArtwork>> = {
     sourceUrl: null,
     credit: "ARTE DE BUNGIE · MÁS ALLÁ DE LA LUZ",
   },
+  "season-of-the-hunt": {
+    src: "/media/site-art/lanzamientos/destiny2/caza.jpg",
+    sourceUrl: null,
+    credit: "ARTE DE BUNGIE · TEMPORADA DE LA CAZA",
+  },
   "season-of-the-chosen": {
     src: "/media/site-art/lanzamientos/destiny2/chosen.webp",
     sourceUrl: null,
@@ -81,9 +86,14 @@ const DESTINY_2_RELEASE_ARTWORK: Readonly<Record<string, ReleaseArtwork>> = {
     credit: "ARTE DE BUNGIE · TEMPORADA DEL SIMBIONTE",
   },
   "season-of-the-lost": {
-    src: "/media/site-art/lanzamientos/destiny2/perdisoas.jpg",
+    src: "/media/site-art/lanzamientos/destiny2/perdidos%202.jpg",
     sourceUrl: null,
     credit: "ARTE DE BUNGIE · TEMPORADA DE LOS PERDIDOS",
+  },
+  "season-of-the-undying": {
+    src: "/media/site-art/lanzamientos/destiny2/imperecedero.webp",
+    sourceUrl: null,
+    credit: "ARTE DE BUNGIE · TEMPORADA DE LO IMPERECEDERO",
   },
   "the-witch-queen": {
     src: "/media/site-art/lanzamientos/destiny2/the%20reina%20bruja.jpeg",
@@ -94,6 +104,11 @@ const DESTINY_2_RELEASE_ARTWORK: Readonly<Record<string, ReleaseArtwork>> = {
     src: "/media/site-art/lanzamientos/destiny2/atormentados.jpg",
     sourceUrl: null,
     credit: "ARTE DE BUNGIE · TEMPORADA DE LOS ATORMENTADOS",
+  },
+  "season-of-the-risen": {
+    src: "/media/site-art/lanzamientos/destiny2/d2_s16_DPS_Banner_Season-renacido.jpg",
+    sourceUrl: null,
+    credit: "ARTE DE BUNGIE · TEMPORADA DE LOS RENACIDOS",
   },
   "season-of-plunder": {
     src: "/media/site-art/lanzamientos/destiny2/tesoros.jpg",
@@ -115,6 +130,11 @@ const DESTINY_2_RELEASE_ARTWORK: Readonly<Record<string, ReleaseArtwork>> = {
     sourceUrl: null,
     credit: "ARTE DE BUNGIE · TEMPORADA DE LAS PROFUNDIDADES",
   },
+  "season-of-defiance": {
+    src: "/media/site-art/lanzamientos/destiny2/resitencia.jpg",
+    sourceUrl: null,
+    credit: "ARTE DE BUNGIE · TEMPORADA DE LA RESISTENCIA",
+  },
   "season-of-the-witch": {
     src: "/media/site-art/lanzamientos/destiny2/tem%20brujas.jpg",
     sourceUrl: null,
@@ -129,6 +149,11 @@ const DESTINY_2_RELEASE_ARTWORK: Readonly<Record<string, ReleaseArtwork>> = {
     src: "/media/site-art/lanzamientos/destiny2/froma%20final.jpg",
     sourceUrl: null,
     credit: "ARTE DE BUNGIE · LA FORMA FINAL",
+  },
+  "episode-echoes": {
+    src: "/media/site-art/lanzamientos/destiny2/Episode_Echoes.webp",
+    sourceUrl: null,
+    credit: "ARTE DE BUNGIE · EPISODIO: ECOS",
   },
   revenant: {
     src: "/media/site-art/lanzamientos/destiny2/Destiny-2-Resurgimiento-2.jpg",
@@ -202,5 +227,14 @@ export function getReleaseArtwork(releaseSlug?: string | null): ReleaseArtwork |
 }
 
 export function getReleaseDisplayTitle(releaseSlug: string | null | undefined, title: string): string {
-  return releaseSlug === "renegades" ? "Los Desertores" : title;
+  switch (releaseSlug) {
+    case "renegades":
+      return "Los Desertores";
+    case "revenant":
+      return "Episodio: Resurgimiento";
+    case "heresy":
+      return "Episodio: Herejía";
+    default:
+      return title;
+  }
 }

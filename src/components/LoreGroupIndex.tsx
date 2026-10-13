@@ -11,16 +11,18 @@ interface LoreGroupIndexProps {
 }
 
 function releaseIcon(group: LoreGroup): string | null {
-  return getReleaseIconUrl(group.releaseSlug)
-    ?? (isBungieAsset(group.imageUrl) ? group.imageUrl : null);
+  return getReleaseIconUrl(group.releaseSlug);
 }
 
 export default function LoreGroupIndex({ groups, type, onSelect }: LoreGroupIndexProps) {
   if (type === "release") {
+    const orderedReleases = [...groups].sort(
+      (left, right) => (right.releaseOrder ?? 0) - (left.releaseOrder ?? 0),
+    );
     return (
       <div className="group-index release-index">
         <div className="release-grid">
-          {groups.map((group, index) => (
+          {orderedReleases.map((group, index) => (
             <article className="release-card" key={group.id}>
               <button className="release-card-main" onClick={() => onSelect(group)} type="button">
                 <span className="release-index-number">{group.releaseNumber ?? group.releaseOrder ?? index + 1}</span>

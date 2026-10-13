@@ -64,14 +64,34 @@ export async function handler(event) {
   const whereSql = where.join(" AND ");
   const catalogEntriesSql = `SELECT c.*,
                                     ROW_NUMBER() OVER (
-                                      PARTITION BY c.source_game, c.category, c.title_en,
-                                        COALESCE(c.title_es, ''), COALESCE(c.summary_es, ''),
-                                        COALESCE(c.image_url, ''), COALESCE(c.icon_url, ''),
-                                        COALESCE(c.rarity, ''), COALESCE(c.class_type, -1),
-                                        COALESCE(c.item_type, ''), COALESCE(c.description_en, ''),
-                                        COALESCE(c.description_es, ''), COALESCE(c.flavor_text_en, ''),
-                                        COALESCE(c.flavor_text_es, '')
-                                      ORDER BY c.id
+                                      PARTITION BY c.source_game, c.category,
+                                        CASE WHEN c.category IN ('weapons', 'armor')
+                                          THEN lower(regexp_replace(btrim(c.title_en), '\\s+', ' ', 'g'))
+                                          ELSE c.title_en
+                                        END,
+                                        CASE WHEN c.category IN ('weapons', 'armor') THEN '' ELSE COALESCE(c.title_es, '') END,
+                                        CASE WHEN c.category IN ('weapons', 'armor') THEN '' ELSE COALESCE(c.summary_es, '') END,
+                                        CASE WHEN c.category IN ('weapons', 'armor') THEN '' ELSE COALESCE(c.image_url, '') END,
+                                        CASE WHEN c.category IN ('weapons', 'armor') THEN '' ELSE COALESCE(c.icon_url, '') END,
+                                        CASE WHEN c.category IN ('weapons', 'armor') THEN '' ELSE COALESCE(c.rarity, '') END,
+                                        CASE WHEN c.category IN ('weapons', 'armor') THEN COALESCE(c.class_type, -1) ELSE -1 END,
+                                        CASE WHEN c.category IN ('weapons', 'armor') THEN '' ELSE COALESCE(c.item_type, '') END,
+                                        CASE WHEN c.category IN ('weapons', 'armor') THEN '' ELSE COALESCE(c.description_en, '') END,
+                                        CASE WHEN c.category IN ('weapons', 'armor') THEN '' ELSE COALESCE(c.description_es, '') END,
+                                        CASE WHEN c.category IN ('weapons', 'armor') THEN '' ELSE COALESCE(c.flavor_text_en, '') END,
+                                        CASE WHEN c.category IN ('weapons', 'armor') THEN '' ELSE COALESCE(c.flavor_text_es, '') END
+                                      ORDER BY
+                                        CASE c.rarity
+                                          WHEN 'Excepcional' THEN 0
+                                          WHEN 'Leyenda' THEN 1
+                                          WHEN 'Peculiar' THEN 2
+                                          WHEN 'Poco común' THEN 3
+                                          WHEN 'Común' THEN 4
+                                          ELSE 5
+                                        END,
+                                        (c.image_url IS NOT NULL OR c.icon_url IS NOT NULL) DESC,
+                                        (c.description_es IS NOT NULL) DESC,
+                                        c.id
                                     ) AS duplicate_rank
                              FROM game_catalog_entries c
                              WHERE ${whereSql}`;

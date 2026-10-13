@@ -1,6 +1,45 @@
 const RELEASE_ICON_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const AVAILABLE_RELEASE_ICONS = new Set([
+  "age-of-triumph",
+  "beyond-light",
+  "curse-of-osiris",
+  "destiny",
+  "destiny-2",
+  "destiny-2-beta",
+  "forsaken",
+  "heresy",
+  "house-of-wolves",
+  "lightfall",
+  "monument-of-triumph",
+  "renegades",
+  "revenant",
+  "rise-of-iron",
+  "season-of-arrivals",
+  "season-of-dawn",
+  "season-of-opulence",
+  "season-of-plunder",
+  "season-of-the-chosen",
+  "season-of-the-deep",
+  "season-of-the-drifter",
+  "season-of-the-forge",
+  "season-of-the-haunted",
+  "season-of-the-lost",
+  "season-of-the-seraph",
+  "season-of-the-splicer",
+  "season-of-the-wish",
+  "season-of-the-witch",
+  "season-of-the-worthy",
+  "shadowkeep",
+  "the-dark-below",
+  "the-edge-of-fate",
+  "the-final-shape",
+  "the-taken-king",
+  "the-taken-king-april-update",
+  "the-witch-queen",
+  "warmind",
+]);
 
 export function getReleaseIconUrl(slug: string | null | undefined): string | null {
-  if (!slug || !RELEASE_ICON_SLUG.test(slug)) return null;
+  if (!slug || !RELEASE_ICON_SLUG.test(slug) || !AVAILABLE_RELEASE_ICONS.has(slug)) return null;
   return `/media/ishtar-releases/release-${slug}.svg`;
 }

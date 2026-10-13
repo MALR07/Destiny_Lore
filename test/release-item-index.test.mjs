@@ -7,11 +7,11 @@ const [releaseIndex, itemIndex] = await Promise.all([
   readFile(new URL("../data/release-item-index.json", import.meta.url), "utf8").then(JSON.parse),
 ]);
 
-test("maps only Bungie inventory items to the 37 editorial releases", () => {
+test("maps only Bungie inventory items to the 42 editorial releases", () => {
   const releasesBySlug = new Map(releaseIndex.map((release) => [release.slug, release]));
   const total = Object.values(itemIndex).reduce((sum, items) => sum + items.length, 0);
 
-  assert.equal(releaseIndex.length, 37);
+  assert.equal(releaseIndex.length, 42);
   assert.deepEqual(Object.keys(itemIndex).sort(), [...releasesBySlug.keys()].sort());
   assert.ok(total > 0);
 
@@ -38,5 +38,23 @@ test("maps only Bungie inventory items to the 37 editorial releases", () => {
       assert.ok(!seen.has(key), `${releaseSlug} repeats ${item.titleEn}`);
       seen.add(key);
     }
+  }
+
+  assert.ok(itemIndex["season-of-the-hunt"].some((item) => item.titleEn === "Wild Hunt Cloak"));
+  assert.ok(itemIndex["season-of-the-undying"].some((item) => item.titleEn === "Pluperfect"));
+  assert.ok(itemIndex["season-of-the-risen"].some((item) => item.titleEn === "Tusked Allegiance Cloak"));
+  assert.ok(itemIndex["season-of-defiance"].some((item) => item.titleEn === "Season of Defiance"));
+  assert.ok(itemIndex["episode-echoes"].some((item) => item.titleEn === "The Call"));
+  for (const slug of [
+    "season-of-the-hunt",
+    "season-of-the-undying",
+    "season-of-the-risen",
+    "season-of-defiance",
+    "episode-echoes",
+    "revenant",
+    "heresy",
+  ]) {
+    assert.equal(releasesBySlug.get(slug)?.sourceGame, "destiny2", `${slug} is missing from the Destiny 2 release index`);
+    assert.ok(itemIndex[slug], `${slug} is missing its launch item index`);
   }
 });

@@ -31,6 +31,7 @@ export default function CatalogReader({ entry, onClose, largeArtwork = false }: 
   const flavorText = entry.flavorTextEs ?? entry.flavorTextEn;
   const flavorLanguage = entry.flavorTextEs ? "es" : entry.flavorTextEn ? "en" : null;
   const hasDuplicateFlavorText = Boolean(description && flavorText && description === flavorText);
+  const destinyWikiSearch = `https://www.destinypedia.com/Special:Search?search=${encodeURIComponent(entry.titleEn || entry.title)}`;
 
   return (
     <div className="reader-backdrop" onMouseDown={onClose}>
@@ -105,11 +106,9 @@ export default function CatalogReader({ entry, onClose, largeArtwork = false }: 
               </p>
             </>
           )}
-          {entry.sourceUrl && (
-            <a className="source-link" href={entry.sourceUrl} rel="noreferrer" target="_blank">
-              ABRIR FUENTE OFICIAL DE BUNGIE ↗
-            </a>
-          )}
+          <a className="source-link" href={destinyWikiSearch} rel="noreferrer" target="_blank">
+            BUSCAR ESTE OBJETO EN LA WIKI DE DESTINY ↗
+          </a>
         </div>
       </article>
     </div>

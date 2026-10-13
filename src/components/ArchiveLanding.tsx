@@ -1,3 +1,5 @@
+import GuardianClassSelector from "./GuardianClassSelector";
+
 interface ArchiveLandingProps {
   onOpenGame: (game: "destiny1" | "destiny2") => void;
   onOpenChronicles: (section: "books" | "releases" | "timeline") => void;
@@ -57,7 +59,7 @@ export default function ArchiveLanding({
           <div>
             <span className="eyebrow">LIBROS · LANZAMIENTOS · CRONOLOGÍA</span>
             <h3>Crónicas</h3>
-            <p>Lee las colecciones y sigue el recorrido del Guardián.</p>
+            <p>Lee los libros y lanzamientos y sigue el recorrido del Guardián.</p>
           </div>
           <div className="landing-actions">
             <button onClick={() => onOpenChronicles("books")} type="button">LIBROS</button>
@@ -75,6 +77,8 @@ export default function ArchiveLanding({
           <i aria-hidden="true">↗</i>
         </button>
       </div>
+
+      <GuardianClassSelector />
     </section>
   );
 }

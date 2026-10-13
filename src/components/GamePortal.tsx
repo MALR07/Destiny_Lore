@@ -50,7 +50,11 @@ export default function GamePortal({
     setLoading(true);
     setError(null);
     getLoreGroups("release", "", controller.signal)
-      .then((items) => setReleases(items.filter((item) => item.sourceGame === game)))
+      .then((items) => setReleases(
+        items
+          .filter((item) => item.sourceGame === game)
+          .sort((left, right) => (right.releaseOrder ?? 0) - (left.releaseOrder ?? 0)),
+      ))
       .catch((reason: unknown) => {
         if (reason instanceof DOMException && reason.name === "AbortError") return;
         setError(reason instanceof Error ? reason.message : "No se pudieron cargar las expansiones.");
@@ -113,10 +117,7 @@ export default function GamePortal({
               ?? (release.releaseImageKind === "artwork" && isBungieAsset(release.releaseImageUrl)
                 ? release.releaseImageUrl
                 : null);
-            const icon = getReleaseIconUrl(release.releaseSlug)
-              ?? (release.releaseImageKind === "icon" && isBungieAsset(release.releaseImageUrl)
-                ? release.releaseImageUrl
-                : null);
+            const icon = getReleaseIconUrl(release.releaseSlug);
             return (
               <button
                 className="game-release-card"

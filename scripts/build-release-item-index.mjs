@@ -12,6 +12,13 @@ const API_CONCURRENCY = 8;
 const CATALOG_PAGE_SIZE = 24;
 const REPOSITORY_NAME = basename(dirname(dirname(fileURLToPath(import.meta.url))));
 const CRAWL_CACHE = join(tmpdir(), `${REPOSITORY_NAME}-ishtar-item-pages.json`);
+const LOCAL_RELEASE_ITEMS = new Set([
+  "episode-echoes",
+  "season-of-defiance",
+  "season-of-the-hunt",
+  "season-of-the-risen",
+  "season-of-the-undying",
+]);
 
 async function fetchResponse(url, timeout = 30_000) {
   for (let attempt = 0; attempt < 4; attempt += 1) {
@@ -197,9 +204,10 @@ function matchItem(ishtarItem, sourceGame, catalogByTitle) {
 }
 
 async function main() {
-  const releaseIndex = JSON.parse(
-    await readFile(new URL("../data/release-index.json", import.meta.url), "utf8"),
-  );
+  const [releaseIndex, itemIndex] = await Promise.all([
+    readFile(new URL("../data/release-index.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../data/release-item-index.json", import.meta.url), "utf8").then(JSON.parse),
+  ]);
   const catalog = await loadOfficialCatalog();
   const catalogByTitle = new Map();
   for (const item of catalog) {
@@ -213,6 +221,14 @@ async function main() {
   const crawlCache = await readCrawlCache();
   const saveCache = () => writeFile(CRAWL_CACHE, JSON.stringify(crawlCache), "utf8");
   const releases = await mapConcurrent(releaseIndex, 1, async (release) => {
+    if (LOCAL_RELEASE_ITEMS.has(release.slug)) {
+      const items = itemIndex[release.slug];
+      if (!Array.isArray(items) || items.length === 0) {
+        throw new Error(`El lanzamiento "${release.slug}" necesita una selección local de items.`);
+      }
+      console.log(`${release.title}: se conservan ${items.length} items locales; Ishtar no publica una página independiente.`);
+      return [release.slug, items];
+    }
     const items = await loadIshtarRelease(release, () => {
       completedPages += 1;
       if (completedPages % 200 === 0) console.log(`Leídas ${completedPages.toLocaleString("es-ES")} páginas de items…`);

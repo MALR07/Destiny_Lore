@@ -5,8 +5,8 @@ import { pool } from "../netlify/functions/lib/db.mjs";
 const SYNC_VERSION = "v9";
 const D1_SYNC_VERSION = "v11";
 const CATALOG_SYNC_VERSION = "v15";
-const LORE_GROUPS_SYNC_VERSION = "v21";
-const RELEASE_ITEMS_SYNC_VERSION = "v2";
+const LORE_GROUPS_SYNC_VERSION = "v23";
+const RELEASE_ITEMS_SYNC_VERSION = "v3";
 const SYNC_TASKS = [
   { key: `destiny2-${SYNC_VERSION}`, script: "sync-lore.mjs", label: "Destiny 2" },
   { key: `destiny1-${D1_SYNC_VERSION}`, script: "sync-d1-grimoire.mjs", label: "Grimorio de Destiny 1" },
