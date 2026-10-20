@@ -7,6 +7,7 @@ import ApiLoading from "./components/ApiLoading";
 import { raids } from "./data/raids";
 import { getCatalog, getCatalogEntryById, getLore, getLoreEntryById, getLoreGroups } from "./lib/api";
 import { metadataForRoute, parseArchiveRoute, pathForCatalog, pathForGame, pathForGrimoirePage, pathForGroup, routeSlug } from "./lib/routes";
+import { followInternalLink } from "./lib/navigation";
 import type {
   CatalogCategory,
   CatalogEntry,

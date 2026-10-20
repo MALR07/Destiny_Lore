@@ -46,7 +46,7 @@ export interface LoreGroup {
   releaseImageKind?: "icon" | "artwork" | null;
   parentGroupId?: string | null;
   sortOrder?: number;
-  lorePreview: Array<{ id: string; title: string }>;
+  lorePreview: Array<{ id: string; title: string; sourceGame: "destiny1" | "destiny2" }>;
   entryCount: number;
   localEntryCount: number;
   catalogItemCount: number;

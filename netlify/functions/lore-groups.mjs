@@ -89,10 +89,11 @@ export async function handler(event) {
               COALESCE((
                 SELECT json_agg(json_build_object(
                   'id', preview.id::text,
-                  'title', COALESCE(NULLIF(preview.title_es, ''), preview.title_en)
+                  'title', COALESCE(NULLIF(preview.title_es, ''), preview.title_en),
+                  'sourceGame', preview.source_game
                 ) ORDER BY preview.sort_order, lower(COALESCE(NULLIF(preview.title_es, ''), preview.title_en)))
                 FROM (
-                  SELECT e.id, e.title_es, e.title_en, ge.sort_order
+                  SELECT e.id, e.title_es, e.title_en, e.source_game, ge.sort_order
                   FROM lore_group_entries ge
                   JOIN lore_entries e ON e.id = ge.lore_entry_id
                   WHERE ge.group_id = g.id
