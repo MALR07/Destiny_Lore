@@ -1,9 +1,13 @@
 import { unzipSync } from "fflate";
 import he from "he";
+import initSqlJs from "sql.js";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { getBungieImageUrl } from "./lore-manifest.mjs";
 
 const SQLITE_SIGNATURE = new TextEncoder().encode("SQLite format 3\0");
 const ZIP_SIGNATURE = [0x50, 0x4b, 0x03, 0x04];
+const DEFINITION_TABLES = new Set(["DestinyGrimoireCardDefinition", "DestinyGrimoireDefinition"]);
 
 function hasSignature(bytes, signature) {
   return signature.every((byte, index) => bytes[index] === byte);
@@ -22,6 +26,40 @@ export function findSqlitePayload(bytes, depth = 0) {
     if (hasSignature(content, ZIP_SIGNATURE)) return findSqlitePayload(content, depth + 1);
   }
   throw new Error("No se encontró la base SQLite dentro del archivo del manifiesto.");
+}
+
+export async function loadD1Definitions(databaseBytes, locale, tableName) {
+  if (!DEFINITION_TABLES.has(tableName)) {
+    throw new Error(`La tabla ${tableName} no está permitida para leer el Grimorio.`);
+  }
+  const wasmPath = resolve(dirname(fileURLToPath(import.meta.url)), "../node_modules/sql.js/dist/sql-wasm.wasm");
+  const SQL = await initSqlJs({ locateFile: () => wasmPath });
+  const database = new SQL.Database(databaseBytes);
+  try {
+    const columns = database.exec(`PRAGMA table_info("${tableName}")`)[0]?.values ?? [];
+    const names = new Set(columns.map((column) => column[1]));
+    const idColumn = names.has("id") ? "id" : names.has("cardId") ? "cardId" : null;
+    if (!idColumn || !names.has("json")) {
+      throw new Error(`La base de datos ${locale} no tiene el esquema esperado del Grimorio (${tableName}).`);
+    }
+
+    const result = database.exec(
+      `SELECT "${idColumn}", json FROM "${tableName}" ORDER BY "${idColumn}"`,
+    )[0];
+    if (!result) throw new Error(`No se encontraron definiciones del Grimorio en ${locale} (${tableName}).`);
+    const definitions = {};
+    for (const [id, rawJson] of result.values) {
+      if (typeof rawJson !== "string") continue;
+      try {
+        definitions[String(id)] = JSON.parse(rawJson);
+      } catch {
+        throw new Error(`Una definición del Grimorio ${locale} contiene JSON no válido (ID ${id}).`);
+      }
+    }
+    return definitions;
+  } finally {
+    database.close();
+  }
 }
 
 function stringValue(value) {
@@ -81,6 +119,83 @@ export function mapD1GrimoireDefinitions(englishDefinitions, spanishDefinitions)
       contentEs: contentEs || null,
     }];
   });
+}
+
+export function mapD1GrimoireCategories(
+  englishDefinitions,
+  spanishDefinitions,
+  d1LoreEntries,
+  sourceUrl,
+) {
+  const englishThemes = Object.values(englishDefinitions)
+    .flatMap((definition) => Array.isArray(definition?.themeCollection) ? definition.themeCollection : []);
+  if (englishThemes.length === 0) {
+    throw new Error("El manifiesto de Destiny 1 no contiene categorías del Grimorio.");
+  }
+
+  const localizedThemes = new Map(
+    Object.values(spanishDefinitions)
+      .flatMap((definition) => Array.isArray(definition?.themeCollection) ? definition.themeCollection : [])
+      .map((theme) => [String(theme.themeId), theme]),
+  );
+  const loreIds = new Set(d1LoreEntries.map(({ bungieId }) => bungieId));
+  const groups = [];
+
+  for (const [themeIndex, theme] of englishThemes.entries()) {
+    const themeId = String(theme.themeId ?? "").trim();
+    const titleEn = stringValue(theme.themeName);
+    if (!themeId || !titleEn) continue;
+    const themeGroupId = `d1-theme:${themeId}`;
+    const localizedTheme = localizedThemes.get(themeId);
+    const pages = Array.isArray(theme.pageCollection) ? theme.pageCollection : [];
+    const pageGroups = pages.flatMap((page, pageIndex) => {
+      const pageId = String(page.pageId ?? "").trim();
+      const pageTitleEn = stringValue(page.pageName);
+      if (!pageId || !pageTitleEn) return [];
+      const cardIds = Array.isArray(page.cardBriefs)
+        ? [...new Set(page.cardBriefs
+          .map((brief) => String(brief?.cardId ?? "").trim())
+          .filter(Boolean)
+          .map((cardId) => `d1:${cardId}`)
+          .filter((bungieId) => loreIds.has(bungieId)))]
+        : [];
+      return [{
+        groupType: "category",
+        sourceGame: "destiny1",
+        bungieId: `d1-page:${themeId}:${pageId}`,
+        parentBungieId: themeGroupId,
+        sortOrder: pageIndex,
+        titleEn: pageTitleEn.slice(0, 255),
+        titleEs: stringValue(
+          localizedTheme?.pageCollection?.find((localizedPage) => String(localizedPage.pageId) === pageId)?.pageName,
+        ).slice(0, 255) || null,
+        imageUrl: null,
+        sourceUrl,
+        releaseNumber: null,
+        releaseOrder: null,
+        releaseSlug: null,
+        loreHashes: cardIds,
+      }];
+    });
+
+    groups.push({
+      groupType: "category",
+      sourceGame: "destiny1",
+      bungieId: themeGroupId,
+      parentBungieId: null,
+      sortOrder: themeIndex,
+      titleEn: titleEn.slice(0, 255),
+      titleEs: stringValue(localizedTheme?.themeName).slice(0, 255) || null,
+      imageUrl: null,
+      sourceUrl,
+      releaseNumber: null,
+      releaseOrder: null,
+      releaseSlug: null,
+      loreHashes: [...new Set(pageGroups.flatMap(({ loreHashes }) => loreHashes))],
+    }, ...pageGroups);
+  }
+
+  return groups;
 }
 
 function normalizeLore(value) {

@@ -1,13 +1,58 @@
 import { useMemo } from "react";
 import { describeTimelineRelease, guardianTimelineIntro } from "../data/guardian-timeline";
-import type { MediaEntry } from "../data/media";
+import { followInternalLink } from "../lib/navigation";
+import { pathForGroup } from "../lib/routes";
 import type { LoreGroup } from "../types/lore";
-import MediaArchive from "./MediaArchive";
+
+const STORY_VIDEO_BY_RELEASE: Record<string, {
+  videoId: string;
+  title: string;
+  channelName: string;
+  channelUrl: string;
+  startAt?: number;
+}> = {
+  destiny: {
+    videoId: "7bfAAf-TKpA",
+    title: "Destiny 1: campaña base completa",
+    channelName: "TheWildGamer",
+    channelUrl: "https://www.youtube.com/@TheWildGamer95",
+  },
+  "the-dark-below": {
+    videoId: "BlC2_DUTdMQ",
+    title: "Destiny 1: La profunda oscuridad",
+    channelName: "TheWildGamer",
+    channelUrl: "https://www.youtube.com/@TheWildGamer95",
+  },
+  "house-of-wolves": {
+    videoId: "IrAwwcyHpA8",
+    title: "Destiny 1: La Casa de los Lobos",
+    channelName: "TheWildGamer",
+    channelUrl: "https://www.youtube.com/@TheWildGamer95",
+  },
+  "the-taken-king": {
+    videoId: "WbWIcWxVdOk",
+    title: "Destiny 1: El Rey de los Poseídos",
+    channelName: "TheWildGamer",
+    channelUrl: "https://www.youtube.com/@TheWildGamer95",
+  },
+  "rise-of-iron": {
+    videoId: "DAv9WrSeNtE",
+    title: "Destiny 1: Los Señores de Hierro",
+    channelName: "TheWildGamer",
+    channelUrl: "https://www.youtube.com/@TheWildGamer95",
+  },
+  "destiny-2": {
+    videoId: "VI0aooqx65s",
+    title: "Destiny 2: película completa en español",
+    channelName: "Kratosworld",
+    channelUrl: "https://www.youtube.com/@Kratosworld",
+    startAt: 5802,
+  },
+};
 
 interface TimelineArchiveProps {
   releases: LoreGroup[];
   books: LoreGroup[];
-  media: MediaEntry[];
   search: string;
   onOpenGroup: (group: LoreGroup) => void;
   onOpenLore: (id: string) => void;
@@ -20,7 +65,6 @@ function normalize(value: string): string {
 export default function TimelineArchive({
   releases,
   books,
-  media,
   search,
   onOpenGroup,
   onOpenLore,
@@ -67,16 +111,14 @@ export default function TimelineArchive({
     <div className="guardian-timeline">
       <p className="timeline-intro">{guardianTimelineIntro}</p>
       <div className="timeline-list">
-        {orderedReleases.map((release, index) => {
+        {orderedReleases.map((release) => {
           const slug = release.releaseSlug;
           const releaseBooks = slug ? booksByRelease.get(slug) ?? [] : [];
-          const videos = media.filter((entry) =>
-            entry.kind === "video" && entry.releaseSlug === slug,
-          );
+          const storyVideo = slug ? STORY_VIDEO_BY_RELEASE[slug] : undefined;
 
           return (
             <article className="timeline-event" key={release.id}>
-              <span className="timeline-marker" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <span className="timeline-marker" aria-hidden="true" />
               <div className="timeline-event-content">
                 <div className="timeline-event-heading">
                   <div>
@@ -94,6 +136,28 @@ export default function TimelineArchive({
                   </span>
                 </div>
                 <p>{describeTimelineRelease(slug, release.title)}</p>
+                {storyVideo && (
+                  <div className="timeline-release-video">
+                    <span className="eyebrow">
+                      HISTORIA COMPLETA · {release.sourceGame === "destiny1" ? "DESTINY" : "DESTINY 2"}
+                    </span>
+                    <div className="timeline-release-video-frame">
+                      <iframe
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        src={`https://www.youtube-nocookie.com/embed/${storyVideo.videoId}${storyVideo.startAt ? `?start=${storyVideo.startAt}` : ""}`}
+                        title={storyVideo.title}
+                      />
+                    </div>
+                    <p>
+                      Vídeo por{" "}
+                      <a href={storyVideo.channelUrl} rel="noreferrer" target="_blank">{storyVideo.channelName}</a>.
+                      {" "}¡Gracias por compartir este recorrido!
+                    </p>
+                  </div>
+                )}
                 {releaseBooks.length > 0 && (
                   <div className="timeline-books">
                     <span className="eyebrow">LIBROS DE ESTA ETAPA</span>
@@ -101,9 +165,9 @@ export default function TimelineArchive({
                       {releaseBooks
                         .filter((book) => !search || normalize(`${book.title} ${book.titleEn}`).includes(normalize(search)))
                         .map((book) => (
-                        <button key={book.id} onClick={() => onOpenGroup(book)} type="button">
+                        <a href={pathForGroup(book)} key={book.id} onClick={(event) => followInternalLink(event, () => onOpenGroup(book))}>
                           {book.title}
-                        </button>
+                        </a>
                       ))}
                     </div>
                   </div>
@@ -113,29 +177,24 @@ export default function TimelineArchive({
                     <span className="eyebrow">RELATOS DESTACADOS DE BUNGIE</span>
                     <div>
                       {release.lorePreview.map((entry) => (
-                        <button key={entry.id} onClick={() => onOpenLore(entry.id)} type="button">
+                        <a
+                          href={`/${entry.sourceGame === "destiny1" ? "destiny/grimorio" : "destiny2/relatos"}/carta/${entry.id}`}
+                          key={entry.id}
+                          onClick={(event) => followInternalLink(event, () => onOpenLore(entry.id))}
+                        >
                           {entry.title}
-                        </button>
+                        </a>
                       ))}
                     </div>
                   </div>
                 )}
-                {videos.length > 0 && (
-                  <div className="timeline-videos">
-                    <span className="eyebrow">VÍDEOS DEL LANZAMIENTO</span>
-                    <MediaArchive entries={videos} search="" />
-                  </div>
-                )}
-                {videos.length === 0 && (
-                  <p className="timeline-video-empty">CINEMÁTICA EN ESPAÑOL: PENDIENTE DE AÑADIR</p>
-                )}
-                <button
+                <a
                   className="timeline-open-release"
-                  onClick={() => onOpenGroup(release)}
-                  type="button"
+                  href={pathForGroup(release)}
+                  onClick={(event) => followInternalLink(event, () => onOpenGroup(release))}
                 >
                   ABRIR FICHA DEL LANZAMIENTO <span aria-hidden="true">→</span>
-                </button>
+                </a>
               </div>
             </article>
           );

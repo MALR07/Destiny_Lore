@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { pool } from "../netlify/functions/lib/db.mjs";
-import { getLocalizedDefinitionPath } from "./lore-manifest.mjs";
+import { getD1LocalizedWorldPath, getLocalizedDefinitionPath } from "./lore-manifest.mjs";
+import { findSqlitePayload, loadD1Definitions, mapD1GrimoireCategories } from "./d1-grimoire.mjs";
 import {
   addPresentationReleaseMetadata,
   findUnmatchedD1EditorialBooks,
@@ -37,6 +38,15 @@ async function loadTable(manifest, locale, table, apiKey) {
     throw new Error(`La tabla ${table} (${locale}) tiene un formato inesperado.`);
   }
   return { data, url };
+}
+
+async function loadD1GrimoireThemes(path, locale) {
+  const response = await fetch(`${BUNGIE_URL}${path}`, {
+    signal: AbortSignal.timeout(120_000),
+  });
+  if (!response.ok) throw new Error(`Bungie respondió HTTP ${response.status} al descargar el Grimorio de Destiny 1.`);
+  const payload = findSqlitePayload(new Uint8Array(await response.arrayBuffer()));
+  return loadD1Definitions(payload, locale, "DestinyGrimoireDefinition");
 }
 
 async function main() {
@@ -76,7 +86,24 @@ async function main() {
      FROM lore_entries
      WHERE source_game = 'destiny1' AND bungie_id LIKE 'd1:%'`,
   );
+  const d1Manifest = await fetchJson("https://www.bungie.net/d1/Platform/Destiny/Manifest/", {
+    headers: { "X-API-Key": apiKey },
+  });
+  if (d1Manifest?.ErrorCode !== 1) {
+    throw new Error(`Bungie rechazó el manifiesto de Destiny 1: ${d1Manifest?.ErrorStatus ?? d1Manifest?.Message ?? "error desconocido"}.`);
+  }
+  const d1SpanishPath = getD1LocalizedWorldPath(d1Manifest, "es");
+  const [d1EnglishThemes, d1SpanishThemes] = await Promise.all([
+    loadD1GrimoireThemes(getD1LocalizedWorldPath(d1Manifest, "en"), "en"),
+    loadD1GrimoireThemes(d1SpanishPath, "es"),
+  ]);
   const mappedGroups = [
+    ...mapD1GrimoireCategories(
+      d1EnglishThemes,
+      d1SpanishThemes,
+      d1LoreResult.rows,
+      `${BUNGIE_URL}${d1SpanishPath}`,
+    ),
     ...mapLoreGroups(
     presentation.en.data,
     presentation.es.data,
@@ -120,11 +147,14 @@ async function main() {
   );
   const bookCount = groups.filter((group) => group.groupType === "book").length;
   const categoryCount = groups.filter((group) => group.groupType === "category").length;
+  const d1CategoryCount = groups.filter((group) =>
+    group.groupType === "category" && group.sourceGame === "destiny1").length;
   const releases = groups.filter((group) => group.groupType === "release");
 
   await replaceLoreGroups(pool, groups);
   console.log(`Sincronizados ${groups.length.toLocaleString("es-ES")} grupos desde Bungie y el índice local.`);
   console.log(`  Libros: ${bookCount.toLocaleString("es-ES")} clasificados; categorías: ${categoryCount.toLocaleString("es-ES")}.`);
+  console.log(`  Grimorio D1: ${d1CategoryCount.toLocaleString("es-ES")} categorías y páginas oficiales.`);
   console.log(`  Lanzamientos: ${knownReleases.length.toLocaleString("es-ES")} títulos locales, ${releases.length.toLocaleString("es-ES")} grupos finales.`);
   console.log(`  Relaciones de lore oficiales: ${releases.filter((group) => group.loreHashes.length > 0).length.toLocaleString("es-ES")}.`);
 }

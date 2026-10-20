@@ -3,6 +3,8 @@ import { isBungieAsset } from "../lib/bungie-assets";
 import { getReleaseIconUrl } from "../lib/release-icons";
 import { getLoreBookCover } from "../lib/book-covers";
 import { getReleaseDisplayTitle } from "../data/release-artwork";
+import { followInternalLink } from "../lib/navigation";
+import { pathForGroup } from "../lib/routes";
 
 interface LoreGroupIndexProps {
   groups: LoreGroup[];
@@ -22,10 +24,9 @@ export default function LoreGroupIndex({ groups, type, onSelect }: LoreGroupInde
     return (
       <div className="group-index release-index">
         <div className="release-grid">
-          {orderedReleases.map((group, index) => (
+          {orderedReleases.map((group) => (
             <article className="release-card" key={group.id}>
-              <button className="release-card-main" onClick={() => onSelect(group)} type="button">
-                <span className="release-index-number">{group.releaseNumber ?? group.releaseOrder ?? index + 1}</span>
+              <a className="release-card-main" href={pathForGroup(group)} onClick={(event) => followInternalLink(event, () => onSelect(group))}>
                 <strong className="release-index-name">{getReleaseDisplayTitle(group.releaseSlug, group.title)}</strong>
                 <span className="release-index-docs">
                   {`${(group.catalogItemCount ?? 0).toLocaleString("es-ES")} objetos · ${group.localEntryCount.toLocaleString("es-ES")} relatos`}
@@ -43,7 +44,7 @@ export default function LoreGroupIndex({ groups, type, onSelect }: LoreGroupInde
                 <span className="release-index-link">
                   Ver registros de {getReleaseDisplayTitle(group.releaseSlug, group.title)} →
                 </span>
-              </button>
+              </a>
             </article>
           ))}
         </div>
@@ -85,11 +86,11 @@ export default function LoreGroupIndex({ groups, type, onSelect }: LoreGroupInde
             </div>
             <div className="group-list">
               {section.groups.map((group) => (
-                <button
+                <a
                   className="group-index-item"
+                  href={pathForGroup(group)}
                   key={group.id}
-                  onClick={() => onSelect(group)}
-                  type="button"
+                  onClick={(event) => followInternalLink(event, () => onSelect(group))}
                 >
                   {(getLoreBookCover(group.titleEn) || isBungieAsset(group.imageUrl)) && (
                     <img
@@ -106,7 +107,7 @@ export default function LoreGroupIndex({ groups, type, onSelect }: LoreGroupInde
                       : "SIN RELATOS LOCALES"}
                     <i aria-hidden="true">↗</i>
                   </span>
-                </button>
+                </a>
               ))}
             </div>
           </section>

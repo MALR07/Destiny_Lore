@@ -4,14 +4,58 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import {
+  DESTINY1_MAP_LOCATIONS,
   DESTINY2_MAP_LOCATIONS,
+  deduplicateDestinations,
   getDestinationArtworkUrl,
   getDestinationLore,
+  getDestiny1MapLocation,
   getDestiny2MapLocation,
+  isExcludedDestination,
 } from "../src/data/destination-artwork.ts";
 
 const publicDirectory = fileURLToPath(new URL("../public/", import.meta.url));
 const destiny2ArtworkDirectory = join(publicDirectory, "media", "site-art", "destinos", "destiny2");
+
+test("Destiny 1 map has local clickable artwork for the Cosmodrome, Tower, and Reef", () => {
+  assert.deepEqual(DESTINY1_MAP_LOCATIONS.map(({ id }) => id), ["cosmodrome", "tower", "reef"]);
+  assert.equal(getDestiny1MapLocation("Earth")?.id, "cosmodrome");
+  assert.equal(getDestiny1MapLocation("Cosmódromo")?.id, "cosmodrome");
+  assert.equal(getDestiny1MapLocation("The Tower")?.id, "tower");
+  assert.equal(getDestiny1MapLocation("The Reef")?.id, "reef");
+  for (const location of DESTINY1_MAP_LOCATIONS) {
+    assert.ok(location.left > 0 && location.left < 100);
+    assert.ok(location.top > 0 && location.top < 100);
+    const assetPath = decodeURIComponent(location.artworkUrl.replace(/^\/media\//, ""));
+    assert.ok(existsSync(join(publicDirectory, "media", assetPath)), `${location.id} artwork is missing`);
+  }
+});
+
+test("Destiny 1 Cosmódromo and Tower are not excluded from destination results", () => {
+  for (const title of ["Cosmodrome", "Earth", "The Tower"]) {
+    assert.equal(isExcludedDestination({
+      sourceGame: "destiny1",
+      title,
+      titleEn: title,
+    }), false, `${title} should remain available`);
+  }
+  assert.equal(isExcludedDestination({
+    sourceGame: "destiny1",
+    title: "The Last City",
+    titleEn: "The Last City",
+  }), true);
+});
+
+test("duplicate Destiny 1 Reef entries collapse to one destination", () => {
+  const reefEntries = ["The Reef", "Asteroid Belt"].map((title) => ({
+    id: title,
+    sourceGame: "destiny1",
+    category: "places",
+    title,
+    titleEn: title,
+  }));
+  assert.equal(deduplicateDestinations(reefEntries).length, 1);
+});
 
 test("Destiny 2 destinations have unique IDs, descriptions and map positions only when shown", () => {
   assert.ok(DESTINY2_MAP_LOCATIONS.length >= 20);

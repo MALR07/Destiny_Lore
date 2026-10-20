@@ -4,6 +4,8 @@ import type { LoreGroup } from "../types/lore";
 import { isBungieAsset } from "../lib/bungie-assets";
 import { getReleaseIconUrl } from "../lib/release-icons";
 import { getReleaseArtwork, getReleaseDisplayTitle } from "../data/release-artwork";
+import { followInternalLink } from "../lib/navigation";
+import { pathForGroup } from "../lib/routes";
 import ApiLoading from "./ApiLoading";
 
 interface GamePortalProps {
@@ -19,12 +21,14 @@ interface GamePortalProps {
 const GAME_COPY = {
   destiny1: {
     title: "Destiny",
+    image: "/media/destiny%201.jpg",
     era: "EL GRIMORIO ORIGINAL",
     description: "Despierta en la Antigua Rusia y reconstruye los secretos de la Ciudad, la Colmena y el sistema solar.",
     mapLabel: "DESTINOS DE DESTINY",
   },
   destiny2: {
     title: "Destiny 2",
+    image: "/media/desty%202.jpg",
     era: "LA GUERRA POR LA LUZ",
     description: "Sigue la historia de la Vanguardia y explora mundos transformados por la Luz y la Oscuridad.",
     mapLabel: "DESTINOS DE DESTINY 2",
@@ -44,6 +48,7 @@ export default function GamePortal({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const copy = GAME_COPY[game];
+  const gamePath = game === "destiny1" ? "destiny" : "destiny2";
 
   useEffect(() => {
     const controller = new AbortController();
@@ -69,33 +74,36 @@ export default function GamePortal({
     <section className={`game-hub game-hub-${game}`} id="archivo">
       <button className="game-hub-back" onClick={onBack} type="button">← VOLVER AL ARCHIVO</button>
       <header className="game-hub-heading">
-        <span className="eyebrow">{copy.era} · ARCHIVO DEL VIAJERO</span>
-        <h2>{copy.title}</h2>
-        <p>{copy.description}</p>
+        <img alt="" aria-hidden="true" className="game-hub-heading-art" src={copy.image} />
+        <div className="game-hub-heading-copy">
+          <span className="eyebrow">{copy.era} · ARCHIVO DEL VIAJERO</span>
+          <h2>{copy.title}</h2>
+          <p>{copy.description}</p>
+        </div>
       </header>
 
       <div className="game-hub-routes">
-        <button className="game-hub-route" onClick={onOpenLore} type="button">
+        <a className="game-hub-route" href={`/${gamePath}/${game === "destiny1" ? "grimorio" : "relatos"}`} onClick={(event) => followInternalLink(event, onOpenLore)}>
           <span className="game-route-icon" aria-hidden="true">⌕</span>
           <span className="eyebrow">LECTURA Y BÚSQUEDA</span>
           <strong>{game === "destiny1" ? "Grimorio" : "Relatos y códice"}</strong>
           <span>Textos y registros narrativos propios de {copy.title}.</span>
           <i aria-hidden="true">ABRIR ARCHIVO ↗</i>
-        </button>
-        <button className="game-hub-route game-hub-map-route" onClick={onOpenMap} type="button">
+        </a>
+        <a className="game-hub-route game-hub-map-route" href={`/${gamePath}/mapa-estelar`} onClick={(event) => followInternalLink(event, onOpenMap)}>
           <span className="game-route-icon" aria-hidden="true">✧</span>
           <span className="eyebrow">ATLAS INTERACTIVO</span>
           <strong>Mapa estelar</strong>
           <span>{copy.mapLabel}; elige un destino para ver su imagen y abrir su ficha.</span>
           <i aria-hidden="true">EXPLORAR DESTINOS ↗</i>
-        </button>
-        <button className="game-hub-route" onClick={onOpenRaids} type="button">
+        </a>
+        <a className="game-hub-route" href={`/${gamePath}/raids`} onClick={(event) => followInternalLink(event, onOpenRaids)}>
           <span className="game-route-icon" aria-hidden="true">✧</span>
           <span className="eyebrow">ACTIVIDADES DE SEIS GUARDIANES</span>
           <strong>Raids</strong>
           <span>Consulta las incursiones y accede al archivo de su expansión.</span>
           <i aria-hidden="true">VER INCURSIONES ↗</i>
-        </button>
+        </a>
       </div>
 
       <div className="game-release-heading">
@@ -103,7 +111,7 @@ export default function GamePortal({
           <span className="eyebrow">CRONOLOGÍA DE CONTENIDO</span>
           <h3>Expansiones y lanzamientos</h3>
         </div>
-        <button className="text-link" onClick={onOpenReleases} type="button">VER TODOS →</button>
+        <a className="text-link" href={`/${gamePath}/lanzamientos`} onClick={(event) => followInternalLink(event, onOpenReleases)}>VER TODOS →</a>
       </div>
       {error && <p className="game-hub-error" role="alert">{error}</p>}
       {loading ? (
@@ -119,11 +127,11 @@ export default function GamePortal({
                 : null);
             const icon = getReleaseIconUrl(release.releaseSlug);
             return (
-              <button
+              <a
                 className="game-release-card"
+                href={pathForGroup(release)}
                 key={release.id}
-                onClick={() => onOpenRelease(release)}
-                type="button"
+                onClick={(event) => followInternalLink(event, () => onOpenRelease(release))}
                 aria-label={`Abrir la ficha de ${releaseTitle}`}
               >
                 {artwork && (
@@ -148,7 +156,7 @@ export default function GamePortal({
                 <strong>{releaseTitle}</strong>
                 <span>{release.localEntryCount.toLocaleString("es-ES")} relatos · {(release.catalogItemCount ?? 0).toLocaleString("es-ES")} objetos</span>
                 <i aria-hidden="true">VER EXPANSIÓN Y CONTENIDO ↗</i>
-              </button>
+              </a>
             );
           })}
         </div>

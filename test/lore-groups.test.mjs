@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { mapD1GrimoireCategories } from "../scripts/d1-grimoire.mjs";
 import {
   addPresentationReleaseMetadata,
   findUnmatchedD1EditorialBooks,
@@ -60,6 +61,48 @@ const knownReleases = [
     releaseOrder: 2,
   },
 ];
+
+test("maps the official Destiny 1 Grimoire themes and pages to their card IDs", () => {
+  const groups = mapD1GrimoireCategories(
+    {
+      config: {
+        themeCollection: [{
+          themeId: "Guardian",
+          themeName: "Guardian",
+          pageCollection: [{
+            pageId: "Classes",
+            pageName: "Classes",
+            cardBriefs: [{ cardId: 101005 }, { cardId: 101006 }, { cardId: 101005 }],
+          }],
+        }],
+      },
+    },
+    {
+      config: {
+        themeCollection: [{
+          themeId: "Guardian",
+          themeName: "Guardianes",
+          pageCollection: [{
+            pageId: "Classes",
+            pageName: "Clases",
+            cardBriefs: [{ cardId: 101005 }, { cardId: 101006 }, { cardId: 101005 }],
+          }],
+        }],
+      },
+    },
+    [{ bungieId: "d1:101005" }, { bungieId: "d1:101006" }],
+    "https://www.bungie.net/grimoire-es.content",
+  );
+  const [theme, page] = groups;
+
+  assert.equal(theme.titleEs, "Guardianes");
+  assert.equal(theme.sortOrder, 0);
+  assert.deepEqual(theme.loreHashes, ["d1:101005", "d1:101006"]);
+  assert.equal(page.titleEs, "Clases");
+  assert.equal(page.parentBungieId, theme.bungieId);
+  assert.equal(page.sortOrder, 0);
+  assert.deepEqual(page.loreHashes, ["d1:101005", "d1:101006"]);
+});
 
 function mapSample() {
   return mapLoreGroups(

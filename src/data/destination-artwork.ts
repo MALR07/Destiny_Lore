@@ -13,6 +13,52 @@ export interface Destiny2MapLocation {
   wiki: string;
 }
 
+export interface Destiny1MapLocation {
+  id: string;
+  title: string;
+  aliases: readonly string[];
+  left: number;
+  top: number;
+  summary: string;
+  artworkUrl: string;
+  wiki: string;
+}
+
+const DESTINY1_DESTINATIONS_PATH = "/media/site-art/destinos/destiny1/";
+
+export const DESTINY1_MAP_LOCATIONS: readonly Destiny1MapLocation[] = [
+  {
+    id: "cosmodrome",
+    title: "Cosmódromo",
+    aliases: ["cosmodrome", "old russia", "the city perimeter", "perimeter of the city", "cosmodromo", "antigua rusia", "tierra", "earth"],
+    left: 50,
+    top: 72,
+    summary: "En la Antigua Rusia, el Cosmódromo fue el punto de partida de las naves coloniales durante la Edad de Oro. Siglos después, sus instalaciones quedaron en ruinas y se convirtieron en territorio disputado por los Caídos.",
+    artworkUrl: `${DESTINY1_DESTINATIONS_PATH}cosmodoromoi.png`,
+    wiki: "Cosmodrome",
+  },
+  {
+    id: "tower",
+    title: "La Torre",
+    aliases: ["tower", "the tower", "torre"],
+    left: 50,
+    top: 48,
+    summary: "La Torre se alza sobre la Última Ciudad y sirve como centro de mando de la Vanguardia. Desde sus murallas, los Guardianes protegen a la humanidad bajo la mirada del Viajero.",
+    artworkUrl: `${DESTINY1_DESTINATIONS_PATH}TowerPlaza.png`,
+    wiki: "The_Tower",
+  },
+  {
+    id: "reef",
+    title: "El Arrecife",
+    aliases: ["reef", "the reef", "arrecife", "el arrecife", "asteroid belt"],
+    left: 11,
+    top: 43,
+    summary: "El Arrecife, asentado entre los asteroides, es el hogar de los Insomnes. La Reina Mara Sov y su pueblo se convirtieron en aliados decisivos frente a la amenaza de Oryx.",
+    artworkUrl: `${DESTINY1_DESTINATIONS_PATH}Destiny-Reef-Social-Space-Dock.avif`,
+    wiki: "The_Reef",
+  },
+];
+
 const DESTINY2_DESTINATIONS_PATH = "/media/site-art/destinos/destiny2/";
 
 export const DESTINY2_MAP_LOCATIONS: readonly Destiny2MapLocation[] = [
@@ -252,10 +298,17 @@ export const DESTINY2_MAP_LOCATIONS: readonly Destiny2MapLocation[] = [
   },
 ] as const;
 
-const DESTINATION_ARTWORK = [
+interface DestinationArtwork {
+  aliases: readonly string[];
+  src: string;
+  lore: string;
+  wiki: string;
+}
+
+const DESTINATION_ARTWORK: readonly DestinationArtwork[] = [
   {
-    aliases: ["cosmodrome", "old russia", "the city perimeter", "perimeter of the city"],
-    src: "/media/site-art/destinos/destiny1/Official_Destiny_E3_Gameplay_Trailer_Tierra_Antigua_Rusia_Cosmodromo_0.png",
+    aliases: ["cosmodrome", "old russia", "the city perimeter", "perimeter of the city", "cosmodromo", "antigua rusia", "tierra", "earth"],
+    src: `${DESTINY1_DESTINATIONS_PATH}cosmodoromoi.png`,
     lore: "En la Antigua Rusia, el Cosmódromo fue el punto de partida de las naves coloniales durante la Edad de Oro. Siglos después, sus instalaciones quedaron en ruinas y se convirtieron en territorio disputado por los Caídos.",
     wiki: "Cosmodrome",
   },
@@ -291,7 +344,7 @@ const DESTINATION_ARTWORK = [
   },
   {
     aliases: ["tower", "the tower", "torre"],
-    src: "/media/site-art/destinos/destiny1/TowerPlaza.png",
+    src: `${DESTINY1_DESTINATIONS_PATH}TowerPlaza.png`,
     lore: "La Torre se alza sobre la Última Ciudad y sirve como centro de mando de la Vanguardia. Desde sus murallas, los Guardianes protegen a la humanidad bajo la mirada del Viajero.",
     wiki: "The_Tower",
   },
@@ -325,6 +378,13 @@ export function getDestiny2MapLocation(title: string): Destiny2MapLocation | nul
   ) ?? null;
 }
 
+export function getDestiny1MapLocation(title: string): Destiny1MapLocation | null {
+  const normalizedTitle = ` ${normalizeTitle(title)} `;
+  return DESTINY1_MAP_LOCATIONS.find(({ aliases }) =>
+    aliases.some((alias) => normalizedTitle.includes(` ${normalizeTitle(alias)} `)),
+  ) ?? null;
+}
+
 export function getDestinationDescription(entry: CatalogEntry): string | null {
   if (entry.sourceGame === "destiny2") {
     return getDestiny2MapLocation(`${entry.title} ${entry.titleEn}`)?.summary ?? null;
@@ -343,6 +403,9 @@ export function isExcludedDestination(entry: CatalogEntry): boolean {
   if (entry.sourceGame !== "destiny1") return false;
 
   const title = normalizeTitle(`${entry.title} ${entry.titleEn}`);
+  if (getDestiny1MapLocation(title)?.id === "cosmodrome" || getDestiny1MapLocation(title)?.id === "tower") {
+    return false;
+  }
   return /\b(expansion destination|destino de expansion|vault of glass|glass chamber|camara de cristal|camara|earth|tierra|the last city|ultima ciudad)\b/.test(title);
 }
 
@@ -383,4 +446,17 @@ export function getDestinationArtworkUrl(entry: CatalogEntry): string | null {
   );
 
   return artwork?.src ?? null;
+}
+
+export function deduplicateDestinations(entries: CatalogEntry[]): CatalogEntry[] {
+  const seen = new Set<string>();
+  return entries.filter((entry) => {
+    const artwork = getDestinationArtworkUrl(entry);
+    const key = artwork
+      ? `artwork:${artwork}`
+      : `title:${normalizeTitle(`${entry.title} ${entry.titleEn}`)}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }

@@ -1,5 +1,6 @@
 import { raids } from "../data/raids";
 import { getRaidArtwork } from "../data/raid-artwork";
+import { followInternalLink } from "../lib/navigation";
 interface RaidArchiveProps {
   game: "destiny1" | "destiny2";
   search: string;
@@ -56,9 +57,12 @@ export default function RaidArchive({ game, search, onOpenRaid }: RaidArchivePro
                   IMAGEN: BUNGIE · FUENTE ↗
                 </a>
               )}
-              <button onClick={() => onOpenRaid(raid.id)} type="button">
+              <a
+                href={`/${raid.game === "destiny1" ? "destiny" : "destiny2"}/raids/${raid.id}`}
+                onClick={(event) => followInternalLink(event, () => onOpenRaid(raid.id))}
+              >
                 VER BOTÍN Y GUÍA COMPLETA <span aria-hidden="true">↗</span>
-              </button>
+              </a>
             </div>
           </article>
         );

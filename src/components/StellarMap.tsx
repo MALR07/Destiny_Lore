@@ -4,9 +4,13 @@ import { isBungieAsset } from "../lib/bungie-assets";
 import { decodeHtmlEntities } from "../lib/text";
 import ApiLoading from "./ApiLoading";
 import {
+  DESTINY1_MAP_LOCATIONS,
   DESTINY2_MAP_LOCATIONS,
+  deduplicateDestinations,
   getDestinationArtworkUrl,
   getDestinationDescription,
+  getDestinationLore,
+  getDestiny1MapLocation,
   getDestiny2MapLocation,
   isDestinationActivity,
   isExcludedDestination,
@@ -20,12 +24,18 @@ interface StellarMapProps {
 }
 
 const PAGE_SIZE = 24;
-const CHART_HOTSPOTS = [
-  { label: "Cosmódromo", aliases: ["cosmodrome", "old russia", "perimeter of the city"], left: 50, top: 72 },
+const CHART_HOTSPOTS: {
+  id?: string;
+  label: string;
+  aliases: readonly string[];
+  left: number;
+  top: number;
+}[] = [
+  { id: "cosmodrome", label: "Cosmódromo", aliases: ["cosmodrome", "old russia", "perimeter of the city"], left: 50, top: 72 },
   { label: "Venus", aliases: ["venus", "ishtar"], left: 31, top: 22 },
-  { label: "Arrecife", aliases: ["reef", "arrecife"], left: 11, top: 43 },
+  { id: "reef", label: "Arrecife", aliases: ["reef", "the reef", "arrecife", "asteroid belt"], left: 11, top: 43 },
   { label: "Luna", aliases: ["moon", "luna"], left: 27, top: 58 },
-  { label: "Torre", aliases: ["tower", "torre"], left: 50, top: 48 },
+  { id: "tower", label: "Torre", aliases: ["tower", "torre"], left: 50, top: 48 },
   { label: "Marte", aliases: ["mars", "marte"], left: 84, top: 43 },
   { label: "Saturno", aliases: ["saturn", "saturno"], left: 82, top: 68 },
 ] as const;
@@ -49,7 +59,29 @@ const FEATURE_CARDS = [
 ] as const;
 
 function normalizeLocationTitle(title: string): string {
-  return title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  return title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function createMapLocationEntry(location: (typeof DESTINY1_MAP_LOCATIONS)[number]): CatalogEntry {
+  return {
+    id: `destiny1-map-${location.id}`,
+    sourceGame: "destiny1",
+    category: "places",
+    title: location.title,
+    titleEn: location.title,
+    summaryEs: location.summary,
+    descriptionEn: null,
+    descriptionEs: location.summary,
+    flavorTextEn: null,
+    flavorTextEs: null,
+    imageUrl: location.artworkUrl,
+    imageKind: "artwork",
+    rarity: null,
+    classType: null,
+    itemType: null,
+    iconUrl: null,
+    sourceUrl: `https://www.destinypedia.com/${location.wiki}`,
+  };
 }
 
 export default function StellarMap({ game, onBack, onOpenLocation }: StellarMapProps) {
@@ -59,6 +91,17 @@ export default function StellarMap({ game, onBack, onOpenLocation }: StellarMapP
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const destiny1LocationsWithFallbacks = game === "destiny1"
+    ? [
+      ...locations,
+      ...DESTINY1_MAP_LOCATIONS
+        .filter((destination) => !locations.some((location) =>
+          getDestiny1MapLocation(`${location.title} ${location.titleEn}`)?.id === destination.id,
+        ))
+        .map(createMapLocationEntry),
+    ]
+    : locations;
+  const uniqueDestiny1Locations = deduplicateDestinations(destiny1LocationsWithFallbacks);
   const mappedDestinations = DESTINY2_MAP_LOCATIONS.map((destination) => {
     const entry = locations.find((location) =>
       getDestiny2MapLocation(`${location.title} ${location.titleEn}`)?.id === destination.id,
@@ -98,6 +141,7 @@ export default function StellarMap({ game, onBack, onOpenLocation }: StellarMapP
     };
   });
   const selectedMapDestination = mappedDestinations.find((item) => item.id === selectedDestinationId);
+  const selectedIsCatalogEntry = selected ? locations.some(({ id }) => id === selected.id) : false;
   const locationCards = game === "destiny2"
     ? mappedDestinations.map((destination) => ({
       id: destination.id,
@@ -110,7 +154,7 @@ export default function StellarMap({ game, onBack, onOpenLocation }: StellarMapP
       icon: destination.iconUrl,
       gameLabel: destination.era === "actual" ? "DESTINY 2 · ACTUAL" : "DESTINY 2 · LEGADO",
     }))
-    : locations.map((location) => ({
+    : uniqueDestiny1Locations.map((location) => ({
       id: location.id,
       entry: location,
       title: decodeHtmlEntities(location.title),
@@ -170,12 +214,8 @@ export default function StellarMap({ game, onBack, onOpenLocation }: StellarMapP
       </header>
 
       {error && <div className="state-panel error-panel" role="alert"><strong>No se pudo cargar el mapa</strong><p>{error}</p></div>}
-      {loading ? (
-        <ApiLoading message="Sincronizando destinos con el catálogo…" />
-      ) : !error && locations.length === 0 && game === "destiny1" ? (
-        <div className="state-panel"><strong>No hay destinos en este catálogo</strong><p>Sincroniza los lugares del manifiesto de este juego para poblar el mapa.</p></div>
-      ) : (
-        <>
+      {loading && <ApiLoading compact message="Sincronizando destinos con el catálogo…" />}
+      <>
           <div className="stellar-map-layout">
             <div className={`stellar-canvas${game === "destiny1" || game === "destiny2" ? " stellar-canvas-chart" : ""}${game === "destiny2" ? " stellar-canvas-destiny2" : ""}`} aria-label="Mapa interactivo de destinos">
               {game === "destiny1" ? (
@@ -194,26 +234,27 @@ export default function StellarMap({ game, onBack, onOpenLocation }: StellarMapP
                   </div>
                   {CHART_HOTSPOTS.map((hotspot) => {
                     const location = locations.find((entry) => {
-                      const title = normalizeLocationTitle(entry.titleEn);
-                      return hotspot.aliases.some((alias) => title.includes(alias));
+                      const title = ` ${normalizeLocationTitle(`${entry.title} ${entry.titleEn}`)} `;
+                      return hotspot.aliases.some((alias) => title.includes(` ${normalizeLocationTitle(alias)} `));
                     });
-                    if (!location) return null;
+                    const localLocation = hotspot.id
+                      ? DESTINY1_MAP_LOCATIONS.find(({ id }) => id === hotspot.id)
+                      : undefined;
+                    const mapEntry = location ?? (localLocation ? createMapLocationEntry(localLocation) : null);
+                    if (!mapEntry) return null;
                     return (
                       <button
-                        aria-pressed={selected?.id === location.id}
-                        className={`stellar-node stellar-chart-node${hotspot.label === "Torre" ? " stellar-chart-node-tower" : ""}${selected?.id === location.id ? " stellar-node-active" : ""}`}
+                        aria-label={`Abrir ${hotspot.id === "cosmodrome" ? "el Cosmódromo de la Tierra" : hotspot.label}`}
+                        aria-pressed={selected?.id === mapEntry.id}
+                        className={`stellar-node stellar-chart-node${selected?.id === mapEntry.id ? " stellar-node-active" : ""}`}
                         key={hotspot.label}
-                        onClick={() => setSelected(location)}
+                        onClick={() => setSelected(mapEntry)}
                         style={{ left: `${hotspot.left}%`, top: `${hotspot.top}%` }}
-                        title={decodeHtmlEntities(location.title)}
+                        title={hotspot.label}
                         type="button"
                       >
-                        {hotspot.label === "Torre" && getDestinationArtworkUrl(location) ? (
-                          <img alt="" src={getDestinationArtworkUrl(location) ?? undefined} />
-                        ) : (
-                          <span aria-hidden="true">✦</span>
-                        )}
-                        <span className="visually-hidden">{decodeHtmlEntities(location.title)}</span>
+                        <span aria-hidden="true">✦</span>
+                        <span className="visually-hidden">{hotspot.label}</span>
                       </button>
                     );
                   })}
@@ -333,13 +374,20 @@ export default function StellarMap({ game, onBack, onOpenLocation }: StellarMapP
                   <span className="eyebrow">DESTINO REGISTRADO</span>
                   <h3>{decodeHtmlEntities(selected.title)}</h3>
                   <p>{getDestinationDescription(selected) ?? decodeHtmlEntities(selected.descriptionEs ?? selected.descriptionEn ?? selected.summaryEs)}</p>
-                  <button
-                    className="hero-cta"
-                    onClick={() => onOpenLocation(selected)}
-                    type="button"
-                  >
-                    ABRIR FICHA <span aria-hidden="true">↗</span>
-                  </button>
+                  {selectedIsCatalogEntry && (
+                    <button
+                      className="hero-cta"
+                      onClick={() => onOpenLocation(selected)}
+                      type="button"
+                    >
+                      ABRIR FICHA <span aria-hidden="true">↗</span>
+                    </button>
+                  )}
+                  {getDestinationLore(selected)?.sourceUrl && (
+                    <a className="stellar-location-wiki-link" href={getDestinationLore(selected)?.sourceUrl} rel="noreferrer" target="_blank">
+                      LEER SOBRE ESTA ZONA <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
                   {getDestinationArtworkUrl(selected) && (
                     <small className="stellar-image-credit">
                       {selected.sourceGame === "destiny2" ? "IMAGEN LOCAL DEL DESTINO" : "ARTE LOCAL DEL DESTINO"}
@@ -362,7 +410,7 @@ export default function StellarMap({ game, onBack, onOpenLocation }: StellarMapP
               <small>
                 {game === "destiny2"
                   ? mappedDestinations.filter((destination) => destination.showOnMap).length
-                  : locations.length} LOCALIZACIONES EN EL MAPA
+                  : uniqueDestiny1Locations.length} LOCALIZACIONES EN EL MAPA
               </small>
             </aside>
           </div>
@@ -440,7 +488,6 @@ export default function StellarMap({ game, onBack, onOpenLocation }: StellarMapP
             </section>
           )}
         </>
-      )}
-    </section>
+      </section>
   );
 }

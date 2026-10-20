@@ -1,5 +1,7 @@
 import type { LoreGroup } from "../types/lore";
 import { getLoreBookCover } from "../lib/book-covers";
+import { followInternalLink } from "../lib/navigation";
+import { pathForGroup } from "../lib/routes";
 
 interface BookContextProps {
   group: LoreGroup;
@@ -61,16 +63,16 @@ export default function BookContext({ group, books, onOpenBook }: BookContextPro
         {relatedBooks.length > 0 && (
           <div className="book-related-list" aria-label="Libros relacionados">
             {relatedBooks.map(({ book, context }) => (
-              <button
+              <a
                 className="book-related-link"
+                href={pathForGroup(book)}
                 key={book.id}
-                onClick={() => onOpenBook(book)}
-                type="button"
+                onClick={(event) => followInternalLink(event, () => onOpenBook(book))}
               >
                 <strong>{book.title}</strong>
                 <span>{context}</span>
                 <i aria-hidden="true">↗</i>
-              </button>
+              </a>
             ))}
           </div>
         )}

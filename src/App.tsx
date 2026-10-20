@@ -1,23 +1,12 @@
-import { useEffect, useState } from "react";
-import { mediaEntries } from "./data/media";
+import { lazy, Suspense, useEffect, useState } from "react";
 import LoreCard from "./components/LoreCard";
 import LoreGroupIndex from "./components/LoreGroupIndex";
-import LoreReader from "./components/LoreReader";
-import BookContext from "./components/BookContext";
-import ReleaseArchiveDetail from "./components/ReleaseArchiveDetail";
-import TimelineArchive from "./components/TimelineArchive";
 import CatalogCard from "./components/CatalogCard";
 import EquipmentTile from "./components/EquipmentTile";
-import CatalogReader from "./components/CatalogReader";
-import SiteHeader from "./components/SiteHeader";
-import ArchiveLanding from "./components/ArchiveLanding";
-import GamePortal from "./components/GamePortal";
-import StellarMap from "./components/StellarMap";
-import RaidArchive from "./components/RaidArchive";
-import RaidDetail from "./components/RaidDetail";
 import ApiLoading from "./components/ApiLoading";
 import { raids } from "./data/raids";
 import { getCatalog, getCatalogEntryById, getLore, getLoreEntryById, getLoreGroups } from "./lib/api";
+import { metadataForRoute, parseArchiveRoute, pathForCatalog, pathForGame, pathForGrimoirePage, pathForGroup, routeSlug } from "./lib/routes";
 import type {
   CatalogCategory,
   CatalogEntry,
@@ -30,20 +19,34 @@ import type {
 } from "./types/lore";
 
 const PAGE_SIZE = 24;
+const LoreReader = lazy(() => import("./components/LoreReader"));
+const D1GrimoireArchive = lazy(() => import("./components/D1GrimoireArchive"));
+const BookContext = lazy(() => import("./components/BookContext"));
+const ReleaseArchiveDetail = lazy(() => import("./components/ReleaseArchiveDetail"));
+const TimelineArchive = lazy(() => import("./components/TimelineArchive"));
+const CatalogReader = lazy(() => import("./components/CatalogReader"));
+const SiteHeader = lazy(() => import("./components/SiteHeader"));
+const ArchiveLanding = lazy(() => import("./components/ArchiveLanding"));
+const GamePortal = lazy(() => import("./components/GamePortal"));
+const StellarMap = lazy(() => import("./components/StellarMap"));
+const RaidArchive = lazy(() => import("./components/RaidArchive"));
+const RaidDetail = lazy(() => import("./components/RaidDetail"));
 
 export default function App() {
+  const initialRoute = parseArchiveRoute(window.location.pathname);
+  const [routePath, setRoutePath] = useState(window.location.pathname);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [game, setGame] = useState<"all" | "destiny1" | "destiny2">("all");
+  const [game, setGame] = useState<"all" | "destiny1" | "destiny2">(initialRoute.game);
   const [archiveMode, setArchiveMode] = useState<
     "home" | "game" | "destinations" | "raids" | "raid-detail" | "lore" | "books" | "releases" | "timeline" | "catalog"
-  >("home");
+  >(initialRoute.mode);
   const [returnMode, setReturnMode] = useState<"game" | "raids" | "timeline" | null>(null);
   const [groups, setGroups] = useState<LoreGroup[]>([]);
-  const [selectedRaid, setSelectedRaid] = useState<string | null>(null);
+  const [selectedRaid, setSelectedRaid] = useState<string | null>(initialRoute.raidId ?? null);
   const [selectedGroup, setSelectedGroup] = useState<LoreGroup | null>(null);
-  const [catalogCategory, setCatalogCategory] = useState<CatalogCategory>("all");
+  const [catalogCategory, setCatalogCategory] = useState<CatalogCategory>(initialRoute.catalogCategory ?? "all");
   const [catalogRarity, setCatalogRarity] = useState("");
   const catalogRarities = game === "destiny2"
     ? ["Excepcional", "Leyenda", "Peculiar", "Poco común", "Común"]
@@ -58,18 +61,123 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  async function openLoreReference(reference: LoreReference) {
+  function navigatePath(path: string, returnPath = window.location.pathname) {
+    if (path === window.location.pathname) return;
+    window.history.pushState({ returnPath }, "", path);
+    setRoutePath(path);
+    setError(null);
+  }
+
+  function goBackOr(fallbackPath: string) {
+    if (typeof window.history.state?.returnPath === "string") {
+      window.history.back();
+      return;
+    }
+    window.history.replaceState({}, "", fallbackPath);
+    setRoutePath(fallbackPath);
+    applyRoute(fallbackPath);
+  }
+
+  function openLore(entry: LoreEntry) {
+    setSelected(entry);
+    setSelectedCatalog(null);
+    navigatePath(`/${entry.sourceGame === "destiny1" ? "destiny/grimorio" : "destiny2/relatos"}/carta/${entry.id}`);
+  }
+
+  function openCatalog(entry: CatalogEntry) {
+    setSelectedCatalog(entry);
+    setSelected(null);
+    const path = pathForCatalog(entry.sourceGame, entry.category);
+    navigatePath(`${path}/${entry.id}`);
+  }
+
+  function applyRoute(pathname: string) {
+    const route = parseArchiveRoute(pathname);
+    setArchiveMode(route.mode);
+    setGame(route.game);
+    setSelectedRaid(route.raidId ?? null);
+    setSelectedGroup(null);
     setSelected(null);
     setSelectedCatalog(null);
-    try {
-      if (reference.kind === "lore") {
-        setSelected(await getLoreEntryById(reference.id));
-      } else {
-        setSelectedCatalog(await getCatalogEntryById(reference.id));
-      }
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "No se pudo abrir la referencia.");
+    setCatalogCategory(route.catalogCategory ?? "all");
+    setCatalogRarity("");
+    setCatalogClassType("all");
+    setSearch("");
+    setSearchInput("");
+    setPage(1);
+    setReturnMode(null);
+    setError(null);
+  }
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setRoutePath(window.location.pathname);
+      applyRoute(window.location.pathname);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const route = parseArchiveRoute(routePath);
+    const metadata = metadataForRoute(
+      route,
+      selectedGroup?.title,
+      selected?.title ?? selectedCatalog?.title,
+    );
+    document.title = metadata.title;
+    const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    description?.setAttribute("content", metadata.description);
+    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
     }
+    const canonicalPath = routePath.length > 1 ? routePath.replace(/\/+$/, "") : routePath;
+    canonical.href = `${window.location.origin}${canonicalPath}`;
+    const ogTitle = document.querySelector<HTMLMetaElement>('meta[property="og:title"]');
+    ogTitle?.setAttribute("content", metadata.title);
+    const ogDescription = document.querySelector<HTMLMetaElement>('meta[property="og:description"]');
+    ogDescription?.setAttribute("content", metadata.description);
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute("content", metadata.title);
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute("content", metadata.description);
+    let ogUrl = document.querySelector<HTMLMetaElement>('meta[property="og:url"]');
+    if (!ogUrl) {
+      ogUrl = document.createElement("meta");
+      ogUrl.setAttribute("property", "og:url");
+      document.head.appendChild(ogUrl);
+    }
+    ogUrl.content = canonical.href;
+    const socialImage = `${window.location.origin}/media/site-art/portada/arte%20intro.jpg`;
+    document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", socialImage);
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')?.setAttribute("content", socialImage);
+  }, [routePath, selectedGroup, selected, selectedCatalog]);
+
+  useEffect(() => {
+    const route = parseArchiveRoute(routePath);
+    if (!route.detailId || !route.detailKind) return;
+    if (route.detailKind === "lore" && selected?.id === route.detailId) return;
+    if (route.detailKind === "catalog" && selectedCatalog?.id === route.detailId) return;
+    let active = true;
+    const load = route.detailKind === "lore"
+      ? getLoreEntryById(route.detailId).then((entry) => { if (active) setSelected(entry); })
+      : getCatalogEntryById(route.detailId).then((entry) => { if (active) setSelectedCatalog(entry); });
+    load.catch((reason: unknown) => {
+      if (!active) return;
+      if (reason instanceof DOMException && reason.name === "AbortError") return;
+      setError(reason instanceof Error ? reason.message : "No se pudo abrir el registro enlazado.");
+    });
+    return () => { active = false; };
+  }, [routePath, selected, selectedCatalog]);
+
+  function openLoreReference(reference: LoreReference) {
+    setSelected(null);
+    setSelectedCatalog(null);
+    const path = reference.kind === "lore"
+      ? `/${reference.sourceGame === "destiny1" ? "destiny/grimorio" : "destiny2/relatos"}/carta/${reference.id}`
+      : `${pathForCatalog(reference.sourceGame, reference.category ?? "all")}/${reference.id}`;
+    navigatePath(path);
   }
 
   useEffect(() => {
@@ -84,6 +192,10 @@ export default function App() {
     const controller = new AbortController();
     setLoading(true);
     setError(null);
+    if (archiveMode === "lore" && game === "destiny1") {
+      setLoading(false);
+      return () => controller.abort();
+    }
     if (archiveMode === "home" || archiveMode === "game" || archiveMode === "destinations" || archiveMode === "raid-detail"
       || (archiveMode === "releases" && selectedGroup)) {
       setLoading(false);
@@ -105,9 +217,21 @@ export default function App() {
         })
       : groupType && !selectedGroup
         ? getLoreGroups(groupType, search, controller.signal).then((data) => {
-          setGroups(archiveMode === "releases" && game !== "all"
+          const visibleGroups = archiveMode === "releases" && game !== "all"
             ? data.filter((group) => group.sourceGame === game)
-            : data);
+            : data;
+          setGroups(visibleGroups);
+          const groupSlug = parseArchiveRoute(routePath).groupSlug;
+          if (groupSlug) {
+            const match = visibleGroups.find((group) =>
+              (group.groupType === "release" ? group.releaseSlug ?? routeSlug(group.titleEn || group.title) : routeSlug(group.titleEn || group.title)) === groupSlug,
+            );
+            if (match) {
+              setSelectedGroup(match);
+            } else {
+              setError("No se encontró el libro o lanzamiento solicitado.");
+            }
+          }
         })
         : archiveMode !== "catalog"
         ? getLore(
@@ -135,18 +259,22 @@ export default function App() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [search, page, game, archiveMode, catalogCategory, catalogRarity, catalogClassType, selectedGroup]);
+  }, [search, page, game, archiveMode, catalogCategory, catalogRarity, catalogClassType, selectedGroup, routePath]);
 
   async function openReleaseLore(id: string) {
     try {
+      const entry = await getLoreEntryById(id);
       setSelectedCatalog(null);
-      setSelected(await getLoreEntryById(id));
+      setSelected(entry);
+      navigatePath(`/${entry.sourceGame === "destiny1" ? "destiny/grimorio" : "destiny2/relatos"}/carta/${id}`);
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "No se pudo abrir el relato traducido.");
     }
   }
 
   const isGroupMode = ["books", "releases", "timeline"].includes(archiveMode);
+  const isD1Grimoire = archiveMode === "lore" && game === "destiny1";
+  const isD1GrimoireDetail = isD1Grimoire && Boolean(parseArchiveRoute(routePath).detailId);
   const activeTotal = archiveMode === "catalog"
       ? catalogResult?.total
       : archiveMode === "timeline"
@@ -175,6 +303,20 @@ export default function App() {
     setSelectedGroup(null);
     setReturnMode(null);
     setArchiveMode(mode);
+    const gamePath = game === "destiny1" ? "destiny" : "destiny2";
+    const paths: Record<typeof archiveMode, string> = {
+      home: "/",
+      game: game === "destiny1" || game === "destiny2" ? `/${gamePath}` : "/",
+      destinations: `/${gamePath}/mapa-estelar`,
+      raids: `/${gamePath}/raids`,
+      "raid-detail": `/${gamePath}/raids/${selectedRaid ?? ""}`,
+      lore: `/${gamePath}/${game === "destiny1" ? "grimorio" : "relatos"}`,
+      books: "/cronicas/libros",
+      releases: "/cronicas/lanzamientos",
+      timeline: "/cronicas/recorrido",
+      catalog: "/universo/all/all",
+    };
+    navigatePath(paths[mode]);
   }
   function returnHome() {
     changeMode("home");
@@ -188,6 +330,7 @@ export default function App() {
     setSearch("");
     setSearchInput("");
     setArchiveMode("game");
+    navigatePath(pathForGame(gameId));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   function openChronicles(section: "books" | "releases" | "timeline") {
@@ -198,6 +341,7 @@ export default function App() {
     setSearch("");
     setSearchInput("");
     setArchiveMode(section);
+    navigatePath(section === "books" ? "/cronicas/libros" : section === "releases" ? "/cronicas/lanzamientos" : "/cronicas/recorrido");
     window.setTimeout(() => document.getElementById("archivo")?.scrollIntoView({ behavior: "smooth" }), 0);
   }
   function openUniverse() {
@@ -211,6 +355,7 @@ export default function App() {
     setSearch("");
     setSearchInput("");
     setArchiveMode("catalog");
+    navigatePath(pathForCatalog("all"));
     window.setTimeout(() => document.getElementById("archivo")?.scrollIntoView({ behavior: "smooth" }), 0);
   }
   function openGameLore(gameId: "destiny1" | "destiny2") {
@@ -221,6 +366,7 @@ export default function App() {
     setSearch("");
     setSearchInput("");
     setArchiveMode("lore");
+    navigatePath(`/${gameId === "destiny1" ? "destiny/grimorio" : "destiny2/relatos"}`);
     window.setTimeout(() => document.getElementById("archivo")?.scrollIntoView({ behavior: "smooth" }), 0);
   }
   function openGameReleases(gameId: "destiny1" | "destiny2") {
@@ -231,6 +377,7 @@ export default function App() {
     setSearch("");
     setSearchInput("");
     setArchiveMode("releases");
+    navigatePath(`/${gameId === "destiny1" ? "destiny" : "destiny2"}/lanzamientos`);
     window.setTimeout(() => document.getElementById("archivo")?.scrollIntoView({ behavior: "smooth" }), 0);
   }
   function openGameRaids(gameId: "destiny1" | "destiny2") {
@@ -241,16 +388,20 @@ export default function App() {
     setSearch("");
     setSearchInput("");
     setArchiveMode("raids");
+    navigatePath(`/${gameId === "destiny1" ? "destiny" : "destiny2"}/raids`);
     window.setTimeout(() => document.getElementById("archivo")?.scrollIntoView({ behavior: "smooth" }), 0);
   }
   function openRaidDetail(raidId: string) {
     setSelectedRaid(raidId);
     setArchiveMode("raid-detail");
+    const raid = raids.find((entry) => entry.id === raidId);
+    if (raid) navigatePath(`/${raid.game === "destiny1" ? "destiny" : "destiny2"}/raids/${raid.id}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   function backToRaids() {
     setSelectedRaid(null);
     setArchiveMode("raids");
+    goBackOr(`/${game === "destiny1" ? "destiny" : "destiny2"}/raids`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   function openGroup(group: LoreGroup, returnTo: "game" | "raids" | "timeline" | null = null) {
@@ -260,6 +411,7 @@ export default function App() {
     setReturnMode(returnTo);
     setSelectedGroup(group);
     setArchiveMode(group.groupType === "book" ? "books" : "releases");
+    navigatePath(pathForGroup(group));
   }
   function openTimelineGroup(group: LoreGroup) {
     openGroup(group, "timeline");
@@ -268,11 +420,24 @@ export default function App() {
     setSelectedGroup(null);
     if (returnMode) setArchiveMode(returnMode);
     setReturnMode(null);
+    const fallback = returnMode === "timeline"
+      ? "/cronicas/recorrido"
+      : returnMode === "raids"
+        ? `/${game === "destiny1" ? "destiny" : "destiny2"}/raids`
+        : returnMode === "game"
+          ? pathForGame(game === "destiny2" ? "destiny2" : "destiny1")
+          : selectedGroup?.sourceGame === "destiny1"
+            ? `/destiny/${selectedGroup.groupType === "book" ? "libros" : "lanzamientos"}`
+            : selectedGroup?.sourceGame === "destiny2"
+              ? `/destiny2/${selectedGroup.groupType === "book" ? "libros" : "lanzamientos"}`
+              : selectedGroup?.groupType === "book" ? "/cronicas/libros" : "/cronicas/lanzamientos";
+    goBackOr(fallback);
   }
   const activeRaid = raids.find((raid) => raid.id === selectedRaid);
 
   return (
-    <>
+    <Suspense fallback={<ApiLoading message="Cargando el archivo del Viajero…" />}>
+      <>
       <SiteHeader
         onHome={returnHome}
         onCatalog={openUniverse}
@@ -305,6 +470,7 @@ export default function App() {
             <ArchiveLanding
               onOpenGame={openGame}
               onOpenChronicles={openChronicles}
+              onOpenGrimoire={() => openGameLore("destiny1")}
               onOpenUniverse={openUniverse}
             />
           </div>
@@ -321,7 +487,6 @@ export default function App() {
             onOpenRelease={(group) => openGroup(group, "game")}
           />
         )}
-
         {archiveMode === "raids" && (game === "destiny1" || game === "destiny2") && (
           <section className="archive-section" id="archivo">
             <div className="archive-heading">
@@ -378,7 +543,7 @@ export default function App() {
           <StellarMap
             game={game}
             onBack={() => changeMode("game")}
-            onOpenLocation={setSelectedCatalog}
+            onOpenLocation={openCatalog}
           />
         )}
 
@@ -405,6 +570,8 @@ export default function App() {
                   ? selectedGroup.title
                   : archiveMode === "catalog"
                   ? "Índice del universo"
+                  : isD1Grimoire
+                    ? selected?.sourceGame === "destiny1" ? selected.title : "Grimorio"
                   : groupHeading ?? "Relatos recuperados"}
               </h2>
             </div>
@@ -417,12 +584,14 @@ export default function App() {
                     : `${selectedGroup.entryCount.toLocaleString("es-ES")} referencias en la fuente; aún sin registros locales enlazados.`
                 : archiveMode === "catalog"
                 ? "Armas, armaduras, personajes y referencias localizados desde los manifiestos oficiales."
+                : isD1Grimoire
+                  ? "Cartas del Grimorio, organizadas por las seis categorías y las secciones oficiales del manifiesto de Destiny 1."
                 : archiveMode === "books"
                     ? "Libros de Bungie agrupados por lanzamiento; su clasificación editorial no sustituye el texto oficial."
                       : archiveMode === "releases"
                       ? "Lanzamientos vinculados a los manifiestos oficiales de Bungie, del más reciente al más antiguo."
                         : archiveMode === "timeline"
-                          ? "El viaje del Guardián, desde su despertar, con relatos oficiales, libros y espacio para cinemáticas en español."
+                          ? "Sigue el recorrido de Destiny junto a los relatos oficiales, los libros y la historia completa del Destiny original en vídeo."
                         : "Fragmentos de historia, preservados para la próxima generación de Guardianes."}
             </p>
           </div>
@@ -437,8 +606,12 @@ export default function App() {
           )}
           {archiveMode === "lore" && (
             <div className="archive-route-nav">
-              <button className="archive-route-back" onClick={() => changeMode("game")} type="button">
-                ← VOLVER A {game === "destiny1" ? "DESTINY" : game === "destiny2" ? "DESTINY 2" : "LAS RUTAS"}
+              <button
+                className="archive-route-back"
+                onClick={() => isD1GrimoireDetail ? goBackOr("/destiny/grimorio") : changeMode("game")}
+                type="button"
+              >
+                ← VOLVER A {isD1GrimoireDetail ? "GRIMORIO" : game === "destiny1" ? "DESTINY" : game === "destiny2" ? "DESTINY 2" : "LAS RUTAS"}
               </button>
               <span className="eyebrow">{game === "destiny1" ? "DESTINY · GRIMORIO" : game === "destiny2" ? "DESTINY 2 · RELATOS" : "RELATOS Y GRIMORIO"}</span>
             </div>
@@ -464,10 +637,20 @@ export default function App() {
               </button>
               <nav className="chronicles-tabs" aria-label="Crónicas">
                 {([
-                  ["books", "LIBROS"],
+                    ["grimoire", "GRIMORIO"],
+                    ["books", "LIBROS"],
                   ["releases", "LANZAMIENTOS"],
                   ["timeline", "RECORRIDO DEL GUARDIÁN"],
-                ] as const).map(([mode, label]) => (
+                ] as const).map(([mode, label]) => mode === "grimoire" ? (
+                  <a
+                    className="chronicles-grimoire-link"
+                    href="/destiny/grimorio"
+                    key={mode}
+                    onClick={(event) => followInternalLink(event, () => openGameLore("destiny1"))}
+                  >
+                    {label}
+                  </a>
+                ) : (
                   <button
                     aria-current={archiveMode === mode ? "page" : undefined}
                     className={archiveMode === mode ? "filter-active" : ""}
@@ -482,7 +665,8 @@ export default function App() {
             </div>
           )}
 
-          <div className="archive-toolbar">
+          {!isD1GrimoireDetail ? (
+          <div className={`archive-toolbar${isD1Grimoire ? " archive-toolbar-grimoire" : ""}`}>
             <label className="search-field">
               <span className="search-icon" aria-hidden="true">⌕</span>
               <span className="visually-hidden">Buscar en el archivo</span>
@@ -490,6 +674,8 @@ export default function App() {
                 onChange={(event) => setSearchInput(event.target.value)}
                 placeholder={isGroupMode && !selectedGroup
                   ? `Buscar ${(groupHeading ?? "índice").toLocaleLowerCase("es")}…`
+                  : isD1Grimoire
+                    ? "Busca una carta del Grimorio…"
                   : "Busca armas, armaduras, personajes, lugares y relatos…"}
                 type="search"
                 value={searchInput}
@@ -500,7 +686,7 @@ export default function App() {
               {!isGroupMode && archiveMode === "catalog" && <button
                 aria-pressed={game === "all"}
                 className={game === "all" ? "filter-active" : ""}
-                onClick={() => { setPage(1); setGame("all"); }}
+                onClick={() => { setPage(1); setGame("all"); navigatePath(pathForCatalog("all", catalogCategory)); }}
                 type="button"
               >
                 TODOS LOS JUEGOS
@@ -508,7 +694,7 @@ export default function App() {
               {!isGroupMode && archiveMode === "catalog" && <button
                 aria-pressed={game === "destiny1"}
                 className={game === "destiny1" ? "filter-active" : ""}
-                onClick={() => { setPage(1); setGame("destiny1"); }}
+                onClick={() => { setPage(1); setGame("destiny1"); navigatePath(pathForCatalog("destiny1", catalogCategory)); }}
                 type="button"
               >
                 DESTINY 1
@@ -516,7 +702,7 @@ export default function App() {
               {!isGroupMode && archiveMode === "catalog" && <button
                 aria-pressed={game === "destiny2"}
                 className={game === "destiny2" ? "filter-active" : ""}
-                onClick={() => { setPage(1); setGame("destiny2"); }}
+                onClick={() => { setPage(1); setGame("destiny2"); navigatePath(pathForCatalog("destiny2", catalogCategory)); }}
                 type="button"
               >
                 DESTINY 2
@@ -541,6 +727,7 @@ export default function App() {
                         setPage(1);
                         setCatalogCategory(category);
                         setCatalogRarity("");
+                        navigatePath(pathForCatalog(game, category));
                         setCatalogClassType("all");
                       }}
                       type="button"
@@ -552,6 +739,7 @@ export default function App() {
               ) : null}
             </div>
           </div>
+          ) : null}
           {archiveMode === "catalog" && ["all", "weapons", "armor", "objects"].includes(catalogCategory) && (
             <div className="archive-toolbar catalog-equipment-toolbar">
               <div className="archive-filters" aria-label="Filtrar equipo por rareza">
@@ -602,7 +790,7 @@ export default function App() {
             </div>
           )}
 
-          {!(archiveMode === "releases" && selectedGroup) && <div className="results-meta">
+          {!isD1Grimoire && !(archiveMode === "releases" && selectedGroup) && <div className="results-meta">
             <span>{loading ? "CONSULTANDO EL ARCHIVO…" : `${activeTotal?.toLocaleString("es-ES") ?? 0} ${archiveMode === "timeline" ? "HITOS" : isGroupMode && !selectedGroup ? "GRUPOS" : "REGISTROS"}`}</span>
             <span>
               {archiveMode === "timeline" || archiveMode === "books"
@@ -611,11 +799,11 @@ export default function App() {
             </span>
           </div>}
 
-          {loading && (
+          {loading && !isD1Grimoire && (
             <ApiLoading compact message="Consultando el archivo y sus manifiestos…" />
           )}
 
-          {error && (
+          {error && !isD1Grimoire && (
             <div className="state-panel error-panel" role="alert">
               <span className="state-symbol">!</span>
               <div>
@@ -626,7 +814,7 @@ export default function App() {
             </div>
           )}
 
-          {!error && !loading && activeTotal === 0 && archiveMode !== "timeline" && !(archiveMode === "releases" && selectedGroup) && (
+          {!isD1Grimoire && !error && !loading && activeTotal === 0 && archiveMode !== "timeline" && !(archiveMode === "releases" && selectedGroup) && (
             <div className="state-panel">
               <span className="state-symbol">⌕</span>
               <div>
@@ -654,11 +842,33 @@ export default function App() {
             </div>
           )}
 
+          {isD1Grimoire && !isD1GrimoireDetail && (
+            <D1GrimoireArchive
+              onClearPage={() => goBackOr("/destiny/grimorio")}
+              onSelect={openLore}
+              onSelectPage={(group) => navigatePath(pathForGrimoirePage(group))}
+              search={search}
+              selectedPageSlug={parseArchiveRoute(routePath).grimoirePageSlug}
+            />
+          )}
+          {isD1GrimoireDetail && selected?.sourceGame === "destiny1" && (
+            <LoreReader
+              entry={selected}
+              onClose={() => goBackOr("/destiny/grimorio")}
+              onOpenReference={openLoreReference}
+              presentation="page"
+            />
+          )}
+          {isD1GrimoireDetail && !selected && <ApiLoading compact message="Abriendo la carta del Grimorio…" />}
+
           {archiveMode === "books" && selectedGroup && (
             <BookContext
               books={groups.filter((group) => group.groupType === "book")}
               group={selectedGroup}
-              onOpenBook={setSelectedGroup}
+              onOpenBook={(group) => {
+                setSelectedGroup(group);
+                navigatePath(pathForGroup(group));
+              }}
             />
           )}
 
@@ -667,7 +877,7 @@ export default function App() {
               group={selectedGroup}
               key={selectedGroup.id}
               onOpenLore={openReleaseLore}
-              onOpenCatalog={setSelectedCatalog}
+              onOpenCatalog={openCatalog}
               onOpenRaid={openRaidDetail}
               search={search}
             />
@@ -679,7 +889,6 @@ export default function App() {
           {archiveMode === "timeline" && !error && !loading && (
             <TimelineArchive
               books={groups.filter((group) => group.groupType === "book")}
-              media={mediaEntries}
               onOpenGroup={openTimelineGroup}
               onOpenLore={openReleaseLore}
               releases={groups.filter((group) => group.groupType === "release")}
@@ -687,7 +896,7 @@ export default function App() {
             />
           )}
 
-          {!error && !(archiveMode === "releases" && selectedGroup) && (!isGroupMode || selectedGroup) && (
+          {!isD1Grimoire && !error && !(archiveMode === "releases" && selectedGroup) && (!isGroupMode || selectedGroup) && (
             archiveMode === "catalog"
               ? catalogResult?.items.length
               : archiveMode === "lore" || (archiveMode === "books" && selectedGroup)
@@ -697,21 +906,21 @@ export default function App() {
             archiveMode === "lore" || archiveMode === "books" ? (
               <div className="lore-grid">
                 {result?.items.map((entry) => (
-                  <LoreCard entry={entry} key={entry.id} onSelect={setSelected} />
+                  <LoreCard entry={entry} key={entry.id} onSelect={openLore} />
                 ))}
               </div>
             ) : (
               <div className="equipment-grid">
                 {catalogResult?.items.map((entry) => (
                   entry.category === "weapons" || entry.category === "armor" || entry.category === "objects"
-                    ? <EquipmentTile entry={entry} key={entry.id} onSelect={setSelectedCatalog} />
-                    : <CatalogCard entry={entry} key={entry.id} onSelect={setSelectedCatalog} />
+                    ? <EquipmentTile entry={entry} key={entry.id} onSelect={openCatalog} />
+                    : <CatalogCard entry={entry} key={entry.id} onSelect={openCatalog} />
                 ))}
               </div>
             )
           ) : null}
 
-          {archiveMode !== "raids" && (!(archiveMode === "releases" && selectedGroup) && (!isGroupMode || selectedGroup)) && <div className="pagination">
+          {!isD1Grimoire && archiveMode !== "raids" && (!(archiveMode === "releases" && selectedGroup) && (!isGroupMode || selectedGroup)) && <div className="pagination">
             <button
               disabled={page <= 1 || loading}
               onClick={() => setPage((current) => current - 1)}
@@ -794,16 +1003,26 @@ export default function App() {
           </a>
         </nav>
       </footer>
-      {selected && (
+      {selected && selected.sourceGame !== "destiny1" && (
         <LoreReader
           entry={selected}
-          onClose={() => setSelected(null)}
+          onClose={() => {
+            setSelected(null);
+            goBackOr(`/${selected.sourceGame === "destiny1" ? "destiny/grimorio" : "destiny2/relatos"}`);
+          }}
           onOpenReference={openLoreReference}
         />
       )}
       {selectedCatalog && (
-        <CatalogReader entry={selectedCatalog} onClose={() => setSelectedCatalog(null)} />
+        <CatalogReader
+          entry={selectedCatalog}
+          onClose={() => {
+            setSelectedCatalog(null);
+            goBackOr(pathForCatalog(selectedCatalog.sourceGame, selectedCatalog.category));
+          }}
+        />
       )}
-    </>
+      </>
+    </Suspense>
   );
 }

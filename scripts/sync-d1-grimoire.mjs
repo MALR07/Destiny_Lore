@@ -1,9 +1,11 @@
-import initSqlJs from "sql.js";
-import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
 import { pool } from "../netlify/functions/lib/db.mjs";
 import { getD1LocalizedWorldPath } from "./lore-manifest.mjs";
-import { findSqlitePayload, mapD1GrimoireDefinitions, removeDuplicateLore } from "./d1-grimoire.mjs";
+import {
+  findSqlitePayload,
+  loadD1Definitions,
+  mapD1GrimoireDefinitions,
+  removeDuplicateLore,
+} from "./d1-grimoire.mjs";
 import { upsertLoreRecords } from "./lore-store.mjs";
 
 const API_URL = "https://www.bungie.net/d1/Platform/Destiny/Manifest/";
@@ -20,42 +22,10 @@ async function fetchResponse(url, options) {
   return response;
 }
 
-async function loadDefinitions(databaseBytes, locale) {
-  const wasmPath = resolve(dirname(fileURLToPath(import.meta.url)), "../node_modules/sql.js/dist/sql-wasm.wasm");
-  const SQL = await initSqlJs({ locateFile: () => wasmPath });
-  const database = new SQL.Database(databaseBytes);
-  try {
-    const columns = database.exec("PRAGMA table_info(DestinyGrimoireCardDefinition)")[0]?.values ?? [];
-    const names = new Set(columns.map((column) => column[1]));
-    const idColumn = names.has("id") ? "id" : names.has("cardId") ? "cardId" : null;
-    if (!idColumn || !names.has("json")) {
-      throw new Error(`La base de datos ${locale} no tiene el esquema esperado del Grimorio.`);
-    }
-
-    const result = database.exec(
-      `SELECT "${idColumn}", json FROM DestinyGrimoireCardDefinition ORDER BY "${idColumn}"`,
-    )[0];
-    if (!result) throw new Error(`No se encontraron definiciones del Grimorio en ${locale}.`);
-    const definitions = {};
-    for (const [id, rawJson] of result.values) {
-      if (typeof rawJson !== "string") continue;
-      try {
-        definitions[String(id)] = JSON.parse(rawJson);
-      } catch {
-        throw new Error(`Una definición del Grimorio ${locale} contiene JSON no válido (ID ${id}).`);
-      }
-    }
-    return definitions;
-  } finally {
-    database.close();
-  }
-}
-
 async function fetchDefinitions(path, locale) {
   const response = await fetchResponse(`${BUNGIE_CONTENT_URL}${path}`);
   const archive = new Uint8Array(await response.arrayBuffer());
-  const sqliteBytes = findSqlitePayload(archive);
-  return loadDefinitions(sqliteBytes, locale);
+  return loadD1Definitions(findSqlitePayload(archive), locale, "DestinyGrimoireCardDefinition");
 }
 
 async function main() {

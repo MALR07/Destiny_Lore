@@ -27,10 +27,11 @@ export interface LorePage {
   hasMore: boolean;
 }
 
-export type LoreGroupType = "book" | "release";
+export type LoreGroupType = "category" | "book" | "release";
 
 export interface LoreGroup {
   id: string;
+  bungieId?: string;
   groupType: LoreGroupType;
   sourceGame: "destiny1" | "destiny2" | "all";
   title: string;
@@ -43,6 +44,8 @@ export interface LoreGroup {
   releaseTitle: string | null;
   releaseImageUrl: string | null;
   releaseImageKind?: "icon" | "artwork" | null;
+  parentGroupId?: string | null;
+  sortOrder?: number;
   lorePreview: Array<{ id: string; title: string }>;
   entryCount: number;
   localEntryCount: number;

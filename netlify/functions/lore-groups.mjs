@@ -25,6 +25,9 @@ export async function handler(event) {
     const result = await pool.query(
       `SELECT g.id::text AS id, g.group_type AS "groupType",
               g.source_game AS "sourceGame",
+              g.bungie_id AS "bungieId",
+              g.parent_group_id::text AS "parentGroupId",
+              g.sort_order AS "sortOrder",
               COALESCE(NULLIF(g.title_es, ''), g.title_en) AS title,
               g.title_en AS "titleEn",
               COALESCE(
@@ -109,6 +112,8 @@ export async function handler(event) {
        ORDER BY
          g.release_order ASC NULLS LAST,
          g.release_number NULLS LAST,
+         g.parent_group_id NULLS FIRST,
+         g.sort_order ASC,
          lower(COALESCE(NULLIF(g.title_es, ''), g.title_en)), g.id`,
       values,
     );

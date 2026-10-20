@@ -1,4 +1,6 @@
 import { decodeHtmlEntities } from "../lib/text";
+import { followInternalLink } from "../lib/navigation";
+import { pathForCatalog } from "../lib/routes";
 import type { CatalogEntry } from "../types/lore";
 
 const CLASS_NAMES: Record<number, string> = {
@@ -20,11 +22,11 @@ export default function EquipmentTile({ entry, onSelect }: EquipmentTileProps) {
     .replace(/\p{Diacritic}/gu, "")
     .replace(/\s+/g, "-") ?? "unknown";
   return (
-    <button
+    <a
       aria-label={`${entry.title}${entry.rarity ? `, ${entry.rarity}` : ""}${entry.classType != null ? `, ${CLASS_NAMES[entry.classType]}` : ""}`}
       className={`equipment-tile rarity-${rarity}`}
-      onClick={() => onSelect(entry)}
-      type="button"
+      href={`${pathForCatalog(entry.sourceGame, entry.category)}/${entry.id}`}
+      onClick={(event) => followInternalLink(event, () => onSelect(entry))}
     >
       <span className="equipment-tile-icon">
         {imageUrl && (
@@ -41,6 +43,6 @@ export default function EquipmentTile({ entry, onSelect }: EquipmentTileProps) {
         {entry.rarity ?? entry.itemType ?? (entry.category === "weapons" ? "ARMA" : "EQUIPO")}
         {entry.classType != null && entry.classType < 3 ? ` · ${CLASS_NAMES[entry.classType]}` : ""}
       </span>
-    </button>
+    </a>
   );
 }

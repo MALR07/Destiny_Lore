@@ -47,12 +47,16 @@ CREATE TABLE IF NOT EXISTS lore_groups (
     release_number INT,
     release_order INT,
     release_slug VARCHAR(120),
+    parent_group_id BIGINT REFERENCES lore_groups(id) ON DELETE CASCADE,
+    sort_order INT NOT NULL DEFAULT 0,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (source_game, group_type, bungie_id)
 );
 
 ALTER TABLE lore_groups ADD COLUMN IF NOT EXISTS release_order INT;
 ALTER TABLE lore_groups ADD COLUMN IF NOT EXISTS release_slug VARCHAR(120);
+ALTER TABLE lore_groups ADD COLUMN IF NOT EXISTS parent_group_id BIGINT REFERENCES lore_groups(id) ON DELETE CASCADE;
+ALTER TABLE lore_groups ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0;
 ALTER TABLE lore_groups DROP COLUMN IF EXISTS reference_url;
 ALTER TABLE lore_groups DROP COLUMN IF EXISTS metadata_source;
 ALTER TABLE lore_groups DROP COLUMN IF EXISTS declared_count;
@@ -81,6 +85,8 @@ CREATE INDEX IF NOT EXISTS lore_groups_type_title_idx
     ON lore_groups (group_type, title_es, title_en);
 CREATE INDEX IF NOT EXISTS lore_groups_release_slug_idx
     ON lore_groups (release_slug) WHERE release_slug IS NOT NULL;
+CREATE INDEX IF NOT EXISTS lore_groups_parent_sort_idx
+    ON lore_groups (parent_group_id, sort_order);
 CREATE INDEX IF NOT EXISTS lore_group_entries_entry_idx ON lore_group_entries (lore_entry_id);
 
 CREATE TABLE IF NOT EXISTS game_catalog_entries (

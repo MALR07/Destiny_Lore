@@ -1,4 +1,6 @@
 import { decodeHtmlEntities } from "../lib/text";
+import { followInternalLink } from "../lib/navigation";
+import { pathForCatalog } from "../lib/routes";
 import type { CatalogEntry } from "../types/lore";
 
 const CATEGORY_LABELS: Record<CatalogEntry["category"], string> = {
@@ -26,10 +28,10 @@ export default function CatalogCard({ entry, onSelect }: CatalogCardProps) {
     && Boolean(entry.descriptionEn || entry.flavorTextEn);
 
   return (
-    <button
+    <a
       className={`lore-card catalog-card${entry.imageUrl ? " has-artwork" : ""}`}
-      onClick={() => onSelect(entry)}
-      type="button"
+      href={`${pathForCatalog(entry.sourceGame, entry.category)}/${entry.id}`}
+      onClick={(event) => followInternalLink(event, () => onSelect(entry))}
     >
       {entry.imageUrl && (
         <span className={`card-artwork${entry.imageKind === "icon" ? " card-artwork-icon" : ""}`}>
@@ -53,6 +55,6 @@ export default function CatalogCard({ entry, onSelect }: CatalogCardProps) {
         <span>{hasEnglishFallback ? "TEXTO OFICIAL EN INGLÉS" : hasOfficialText ? "TEXTO DEL MANIFIESTO" : "RESUMEN DEL ARCHIVO"}</span>
         <span>FICHA DE REFERENCIA</span>
       </span>
-    </button>
+    </a>
   );
 }

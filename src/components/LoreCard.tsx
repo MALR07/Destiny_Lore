@@ -1,4 +1,5 @@
 import type { LoreEntry } from "../types/lore";
+import { followInternalLink } from "../lib/navigation";
 import { decodeHtmlEntities, stripHtmlMarkup } from "../lib/text";
 
 interface LoreCardProps {
@@ -13,7 +14,11 @@ export default function LoreCard({ entry, onSelect }: LoreCardProps) {
   const excerpt = cleanLoreText(entry.contentEs || entry.contentEn);
 
   return (
-    <button className={`lore-card${entry.imageUrl ? " has-artwork" : ""}`} onClick={() => onSelect(entry)} type="button">
+    <a
+      className={`lore-card${entry.imageUrl ? " has-artwork" : ""}${entry.sourceGame === "destiny1" ? " lore-card-d1" : ""}`}
+      href={`/${entry.sourceGame === "destiny1" ? "destiny/grimorio" : "destiny2/relatos"}/carta/${entry.id}`}
+      onClick={(event) => followInternalLink(event, () => onSelect(entry))}
+    >
       <span className="card-topline">
         <span className="card-kicker">
           {entry.sourceGame === "destiny1" ? "GRIMORIO · DESTINY 1" : "REGISTRO · DESTINY 2"}
@@ -37,6 +42,6 @@ export default function LoreCard({ entry, onSelect }: LoreCardProps) {
         <span>{entry.contentEs ? "ESPAÑOL OFICIAL" : "ORIGINAL · INGLÉS"}</span>
         <span>LEER RELATO</span>
       </span>
-    </button>
+    </a>
   );
 }

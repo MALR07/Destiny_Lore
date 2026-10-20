@@ -7,6 +7,7 @@ interface LoreReaderProps {
   entry: LoreEntry;
   onClose: () => void;
   onOpenReference: (reference: LoreReference) => void;
+  presentation?: "drawer" | "page";
 }
 
 function escapeRegExp(value: string): string {
@@ -65,7 +66,8 @@ function getYouTubeEmbedUrl(rawUrl: string): string | null {
   }
 }
 
-export default function LoreReader({ entry, onClose, onOpenReference }: LoreReaderProps) {
+export default function LoreReader({ entry, onClose, onOpenReference, presentation = "drawer" }: LoreReaderProps) {
+  const isPage = presentation === "page";
   const cleanLoreText = (text: string) => entry.sourceGame === "destiny1"
     ? stripHtmlMarkup(text)
     : decodeHtmlEntities(text);
@@ -124,21 +126,21 @@ export default function LoreReader({ entry, onClose, onOpenReference }: LoreRead
     .filter((cinematic) => cinematic.embedUrl !== null);
 
   return (
-    <div className="reader-backdrop" onMouseDown={onClose}>
+    <div className={isPage ? "reader-page" : "reader-backdrop"} onMouseDown={isPage ? undefined : onClose}>
       <article
         aria-labelledby="reader-title"
-        aria-modal="true"
-        className="reader-panel"
+        aria-modal={isPage ? undefined : true}
+        className={`reader-panel${isPage ? " reader-panel-page" : ""}${entry.sourceGame === "destiny1" ? " reader-panel-grimoire" : ""}`}
         onMouseDown={(event) => event.stopPropagation()}
-        role="dialog"
+        role={isPage ? undefined : "dialog"}
       >
         <div className="reader-topbar">
           <span>
             ARCHIVO DEL VIAJERO <span className="reader-separator">/</span>
             {entry.sourceGame === "destiny1" ? " GRIMORIO D1" : " LORE D2"}
           </span>
-          <button className="reader-close" onClick={onClose} type="button" aria-label="Cerrar">
-            CERRAR <span aria-hidden="true">×</span>
+          <button className="reader-close" onClick={onClose} type="button" aria-label={isPage ? "Volver al Grimorio" : "Cerrar"}>
+            {isPage ? "VOLVER AL GRIMORIO" : "CERRAR"} <span aria-hidden="true">{isPage ? "←" : "×"}</span>
           </button>
         </div>
         <div className="reader-content">
